@@ -1,0 +1,70 @@
+package com.framgia.rssfeed.utility;
+
+import android.os.AsyncTask;
+
+import com.framgia.rssfeed.XmlParser;
+
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+/**
+ * Created by yue on 25/04/2016.
+ */
+public class LoadDataUtil {
+
+    private XmlParser parser;
+    private OnLoadingListener mOnLoadingListener;
+    private static LoadDataUtil sInstance;
+
+    private LoadDataUtil() {
+        parser = new XmlParser();
+    }
+
+    public static LoadDataUtil getInstance() {
+        if (sInstance == null) {
+            synchronized (LoadDataUtil.class) {
+                if (sInstance == null) {
+                    sInstance = new LoadDataUtil();
+                }
+            }
+        }
+        return sInstance;
+    }
+
+    public void setOnLoadingListener(OnLoadingListener onLoadingListener) {
+        this.mOnLoadingListener = onLoadingListener;
+    }
+
+    public void getDataFromNetwork(String urlString) {
+        AsyncTask<String, Void, ArrayList<Object>> asyncTask = new AsyncTask<String, Void, ArrayList<Object>>() {
+            @Override
+            protected ArrayList<Object> doInBackground(String... params) {
+                try {
+                    return parser.getNewsList(params[0]);
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<Object> objects) {
+                super.onPostExecute(objects);
+                if (mOnLoadingListener != null) {
+                    mOnLoadingListener.onLoadComplete(objects);
+                }
+            }
+        };
+        asyncTask.execute(urlString);
+    }
+
+    public interface OnLoadingListener {
+        void onLoading();
+
+        void onLoadComplete(ArrayList<Object> objects);
+    }
+}
