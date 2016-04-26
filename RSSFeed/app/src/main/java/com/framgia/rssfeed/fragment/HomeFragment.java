@@ -1,23 +1,18 @@
 package com.framgia.rssfeed.fragment;
 
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.framgia.rssfeed.R;
 import com.framgia.rssfeed.base.BaseFragment;
-import com.framgia.rssfeed.bean.News;
-import com.framgia.rssfeed.utility.LoadDataUtil;
-
-import java.util.ArrayList;
 
 /**
  * Created by yue on 21/04/2016.
  */
-public class HomeFragment extends BaseFragment implements LoadDataUtil.OnLoadingListener {
+public class HomeFragment extends BaseFragment {
 
-    private final static String URL_TINH_TE = "https://tinhte.vn/rss/";
-    private final static String URL_VNEXPRESS = "http://vnexpress.net/rss/thoi-su.rss";
-    private ArrayList<News> mNewsList;
+    public final static String TAG_HOME_FRAGMENT = "home fragment";
+    private Button mButtonNext;
 
     @Override
     protected int getFragmentLayoutId() {
@@ -26,24 +21,17 @@ public class HomeFragment extends BaseFragment implements LoadDataUtil.OnLoading
 
     @Override
     protected void onCreateContentView(View rootView) {
-        mNewsList = new ArrayList<>();
-        LoadDataUtil.getInstance().setOnLoadingListener(this);
-        LoadDataUtil.getInstance().getDataFromNetwork(URL_TINH_TE);
-        LoadDataUtil.getInstance().getDataFromNetwork(URL_VNEXPRESS);
+        mButtonNext = (Button) rootView.findViewById(R.id.button_next);
+        mButtonNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getBaseActivity().replaceFragment(new ListNewsFragment(), TAG_HOME_FRAGMENT);
+            }
+        });
     }
 
     @Override
-    public void onLoading() {
-    }
-
-    @Override
-    public void onLoadComplete(ArrayList<Object> objects) {
-        for (int i = 0; i < objects.size(); i++) {
-            mNewsList.add((News) objects.get(i));
-        }
-        Log.e("List size", "" + mNewsList.size());
-        if (mNewsList.size() > 0) {
-            Log.e("0", mNewsList.get(0).getTitle());
-        }
+    protected boolean enableBackButton() {
+        return false;
     }
 }

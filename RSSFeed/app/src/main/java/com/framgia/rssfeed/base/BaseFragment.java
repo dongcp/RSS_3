@@ -3,6 +3,7 @@ package com.framgia.rssfeed.base;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -33,12 +34,22 @@ public abstract class BaseFragment extends Fragment {
         getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(enableBackButton());
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     protected abstract int getFragmentLayoutId();
 
     protected abstract void onCreateContentView(View rootView);
 
     protected void onBackPressed() {
-        getFragmentManager().popBackStack();
+        getBaseActivity().popFragment();
     }
 
     protected BaseActivity getBaseActivity() {
