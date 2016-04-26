@@ -4,7 +4,7 @@ import com.framgia.rssfeed.base.BaseActivity;
 import com.framgia.rssfeed.base.BaseFragment;
 import com.framgia.rssfeed.fragment.HomeFragment;
 
-public class MainActivity extends BaseActivity{
+public class MainActivity extends BaseActivity {
 
     @Override
     protected BaseFragment getFragment() {
