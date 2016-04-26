@@ -14,12 +14,12 @@ import java.util.ArrayList;
  */
 public class LoadDataUtil {
 
-    private XmlParser parser;
+    private XmlParser mParser;
     private OnLoadingListener mOnLoadingListener;
     private static LoadDataUtil sInstance;
 
     private LoadDataUtil() {
-        parser = new XmlParser();
+        mParser = new XmlParser();
     }
 
     public static LoadDataUtil getInstance() {
@@ -42,7 +42,10 @@ public class LoadDataUtil {
             @Override
             protected ArrayList<Object> doInBackground(String... params) {
                 try {
-                    return parser.getNewsList(params[0]);
+                    if(mOnLoadingListener!=null){
+                        mOnLoadingListener.onLoading();
+                    }
+                    return mParser.getNewsList(params[0]);
                 } catch (XmlPullParserException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

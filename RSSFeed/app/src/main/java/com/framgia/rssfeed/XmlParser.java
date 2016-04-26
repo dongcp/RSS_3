@@ -18,55 +18,59 @@ public class XmlParser {
     public final static String TAG_DESCRIPTION = "description";
     public final static String TAG_LINK = "link";
     public final static String TAG_ITEM = "item";
-    private boolean beginParse;
+    private boolean mBeginParse;
 
     public XmlParser() {
-        beginParse = false;
+        mBeginParse = false;
     }
 
     public ArrayList<Object> getNewsList(String urlString) throws XmlPullParserException, IOException {
         ArrayList<Object> data = new ArrayList<>();
         XmlPullParser parser = HttpRequest.getInstance().fetchXml(urlString);
-        String text = "";
-        News news = new News();
-        int event = parser.getEventType();
-        while (event != XmlPullParser.END_DOCUMENT) {
-            String name = parser.getName();
-            switch (event) {
-                case XmlPullParser.START_TAG:
-                    if (name.equals(TAG_ITEM)) {
-                        beginParse = true;
-                        news = new News();
-                    }
-                    break;
-                case XmlPullParser.TEXT:
-                    text = parser.getText();
-                    break;
-                case XmlPullParser.END_TAG:
-                    switch (name) {
-                        case TAG_ITEM:
-                            beginParse = false;
-                            data.add(news);
-                            break;
-                        case TAG_TITLE:
-                            if (beginParse) {
-                                news.setTitle(text);
+        if (parser != null) {
+            String text = "";
+            News news = new News();
+            int event = parser.getEventType();
+            while (event != XmlPullParser.END_DOCUMENT) {
+                switch (event) {
+                    case XmlPullParser.START_TAG:
+                        if (parser.getName() != null) {
+                            if (parser.getName().equals(TAG_ITEM)) {
+                                mBeginParse = true;
+                                news = new News();
                             }
-                            break;
-                        case TAG_DESCRIPTION:
-                            if (beginParse) {
-                                news.setDescription(text);
+                        }
+                        break;
+                    case XmlPullParser.TEXT:
+                        text = parser.getText();
+                    case XmlPullParser.END_TAG:
+                        if (parser.getName() != null) {
+                            switch (parser.getName()) {
+                                case TAG_ITEM:
+                                    mBeginParse = false;
+                                    data.add(news);
+                                    break;
+                                case TAG_TITLE:
+                                    if (mBeginParse) {
+                                        news.setTitle(text);
+                                    }
+                                    break;
+                                case TAG_DESCRIPTION:
+                                    if (mBeginParse) {
+                                        news.setDescription(text);
+                                    }
+                                    break;
+                                case TAG_LINK:
+                                    news.setLink(text);
+                                    break;
                             }
-                            break;
-                        case TAG_LINK:
-                            news.setLink(text);
-                            break;
-                    }
-                    break;
+                        }
+                        break;
+                }
+                event = parser.next();
             }
-            event = parser.next();
+            HttpRequest.getInstance().closeStream();
         }
-        HttpRequest.getInstance().closeStream();
         return data;
     }
 }

@@ -5,6 +5,7 @@ package com.framgia.rssfeed.bean;
  */
 public class News {
 
+    private final static String START_SUBSTRING = "src";
     private String mTitle;
     private String mImageUrl;
     private String mLink;
@@ -49,5 +50,23 @@ public class News {
 
     public void setDescription(String description) {
         mDescription = description;
+        setImageUrl(retrieveImageUrl(description));
+    }
+
+    private String retrieveImageUrl(String description) {
+        String tmp = "";
+        if (!description.contains(START_SUBSTRING))
+            return tmp;
+        int startIndex = description.indexOf(START_SUBSTRING);
+        int count = 0;
+        for (int i = startIndex; i < description.length(); i++) {
+            if (description.charAt(i) == '\"') {
+                count++;
+                continue;
+            }
+            if (count == 1) tmp += description.charAt(i);
+            if (count == 2) break;
+        }
+        return tmp;
     }
 }

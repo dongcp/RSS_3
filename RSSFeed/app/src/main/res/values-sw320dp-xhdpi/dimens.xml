@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--common size-->
+    <dimen name="common_size_5">5dp</dimen>
+    <dimen name="common_size_10">10dp</dimen>
+    <dimen name="common_size_15">15dp</dimen>
+    <dimen name="common_size_80">80dp</dimen>
+
+    <!--common text size-->
+    <dimen name="common_text_size_4">14sp</dimen>
+    <dimen name="common_text_size_5">15sp</dimen>
+    <dimen name="common_text_size_6">16sp</dimen>
+    <dimen name="common_text_size_7">17sp</dimen>
+    <dimen name="common_text_size_8">18sp</dimen>
+    <dimen name="common_text_size_9">19sp</dimen>
+    <dimen name="common_text_size_10">20sp</dimen>
+
+    <dimen name="list_news_image_size">85dp</dimen>
+    <dimen name="list_news_height">110dp</dimen>
+    <dimen name="grid_news_image_size">100dp</dimen>
+    <dimen name="grid_news_height">180dp</dimen>
+    <dimen name="recycler_view_item_default_space">5dp</dimen>
+</resources>
