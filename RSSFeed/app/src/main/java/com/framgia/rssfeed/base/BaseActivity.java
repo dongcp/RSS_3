@@ -1,9 +1,9 @@
 package com.framgia.rssfeed.base;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -37,13 +37,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void addFragment() {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.fragmentContainer, getFragment())
                 .commit();
     }
 
     public void replaceFragment(BaseFragment fragment, String tag) {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment, tag)
                 .setCustomAnimations(R.animator.fragment_slide_right_enter, R.animator.fragment_slide_left_exit,
                         R.animator.fragment_slide_left_enter, R.animator.fragment_slide_right_exit)
@@ -65,7 +65,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected BaseFragment getCurrentFragment() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
-            return (BaseFragment) getFragmentManager().findFragmentById(R.id.fragmentContainer);
+            return (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
         }
         return null;
     }
@@ -74,4 +74,5 @@ public abstract class BaseActivity extends AppCompatActivity {
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
     }
+
 }

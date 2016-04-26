@@ -31,4 +31,5 @@ public class NetworkUtil {
         NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
+
 }

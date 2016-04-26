@@ -8,4 +8,15 @@
     <string name="action_settings">Settings</string>
     <string name="no_data">No Data</string>
     <string name="network_error">Network Error</string>
+
+    <!-- String Category-->
+    <string name="business">Business</string>
+    <string name="education">Education</string>
+    <string name="technology">Technology</string>
+    <string name="law">Law</string>
+    <string name="news">News</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="news_uppercase">NEWS</string>
+    <string name="history_uppercase">HISTORY</string>
+
 </resources>
