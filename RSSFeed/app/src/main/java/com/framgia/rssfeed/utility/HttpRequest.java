@@ -74,4 +74,5 @@ public class HttpRequest {
             mStream.close();
         }
     }
+
 }

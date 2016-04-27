@@ -1,9 +1,11 @@
 package com.framgia.rssfeed.fragment;
 
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.Button;
 
 import com.framgia.rssfeed.R;
+import com.framgia.rssfeed.adapter.TabFragmentAdapter;
 import com.framgia.rssfeed.base.BaseFragment;
 
 /**
@@ -11,8 +13,9 @@ import com.framgia.rssfeed.base.BaseFragment;
  */
 public class HomeFragment extends BaseFragment {
 
-    public final static String TAG_HOME_FRAGMENT = "home fragment";
-    private Button mButtonNext;
+    private ViewPager mViewPager;
+    private TabLayout mTabLayout;
+    private TabFragmentAdapter mTabFragmentAdapter;
 
     @Override
     protected int getFragmentLayoutId() {
@@ -21,17 +24,25 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void onCreateContentView(View rootView) {
-        mButtonNext = (Button) rootView.findViewById(R.id.button_next);
-        mButtonNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getBaseActivity().replaceFragment(new ListNewsFragment(), TAG_HOME_FRAGMENT);
-            }
-        });
+        findView(rootView);
     }
 
     @Override
     protected boolean enableBackButton() {
         return false;
+    }
+
+    private void findView(View view) {
+        mTabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        setupViewPager();
+        mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    private void setupViewPager() {
+        mTabFragmentAdapter = new TabFragmentAdapter(getChildFragmentManager());
+        mTabFragmentAdapter.addFragment(new NewsFragment(), getString(R.string.news_uppercase));
+        mTabFragmentAdapter.addFragment(new HistoryFragment(), getString(R.string.history_uppercase));
+        mViewPager.setAdapter(mTabFragmentAdapter);
     }
 }
