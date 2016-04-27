@@ -42,7 +42,7 @@ public class LoadDataUtil {
             @Override
             protected ArrayList<Object> doInBackground(String... params) {
                 try {
-                    if(mOnLoadingListener!=null){
+                    if (mOnLoadingListener != null) {
                         mOnLoadingListener.onLoading();
                     }
                     return mParser.getNewsList(params[0]);
@@ -67,7 +67,7 @@ public class LoadDataUtil {
 
     public interface OnLoadingListener {
         void onLoading();
-
         void onLoadComplete(ArrayList<Object> objects);
     }
+
 }

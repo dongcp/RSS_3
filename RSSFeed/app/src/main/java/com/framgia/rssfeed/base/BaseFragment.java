@@ -1,7 +1,7 @@
 package com.framgia.rssfeed.base;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,4 +63,5 @@ public abstract class BaseFragment extends Fragment {
     protected boolean enableBackButton() {
         return true;
     }
+
 }
