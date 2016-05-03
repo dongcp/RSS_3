@@ -36,7 +36,11 @@ public abstract class BaseFragment extends Fragment {
         if (enableBackButton()) {
             getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getBaseActivity().getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
-            getBaseActivity().getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            if (enableNavigationDrawer()) {
+                getBaseActivity().getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            } else {
+                getBaseActivity().getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }
         } else {
             if (enableNavigationDrawer()) {
                 getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);

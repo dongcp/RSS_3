@@ -16,10 +16,10 @@ public class HttpRequest {
 
     private final static String REQUEST_METHOD = "GET";
     private final static int READ_TIMEOUT = 10000;
-    private final static int CONNECT_TIMEOUT = 15000;
+    private final static int CONNECT_TIMEOUT = 30000;
+    private static HttpRequest sInstance;
     private HttpURLConnection mConnection;
     private InputStream mStream;
-    private static HttpRequest sInstance;
 
     private HttpRequest() {
     }

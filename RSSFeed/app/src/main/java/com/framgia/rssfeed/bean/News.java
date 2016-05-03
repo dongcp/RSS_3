@@ -1,9 +1,11 @@
 package com.framgia.rssfeed.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by yue on 21/04/2016.
  */
-public class News {
+public class News implements Serializable {
 
     private final static String START_SUBSTRING = "src";
     private String mTitle;
@@ -50,7 +52,7 @@ public class News {
 
     public void setDescription(String description) {
         mDescription = description;
-        setImageUrl(retrieveImageUrl(description));
+        mImageUrl = retrieveImageUrl(description);
     }
 
     private String retrieveImageUrl(String description) {

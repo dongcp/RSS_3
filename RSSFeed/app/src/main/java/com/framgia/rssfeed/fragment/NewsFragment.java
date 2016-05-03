@@ -11,24 +11,19 @@ import com.framgia.rssfeed.GridViewItemDecoration;
 import com.framgia.rssfeed.R;
 import com.framgia.rssfeed.adapter.CategoryAdapter;
 import com.framgia.rssfeed.base.BaseFragment;
+import com.framgia.rssfeed.base.Constants;
 import com.framgia.rssfeed.bean.Category;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class NewsFragment extends BaseFragment implements CategoryAdapter.OnItemListener {
+public class NewsFragment extends BaseFragment implements CategoryAdapter.OnItemClickListener {
 
+    public static final String TAG_NEWS_FRAGMENT = "NEW_FRAGMENT";
     private CategoryAdapter mCategoryAdapter;
     private RecyclerView mRecyclerView;
     private List<Category> mListNews;
-    public static final String TAG_NEWS_FRAGMENT = "NEW_FRAGMENT";
-    public final int INDEX_BUSINESS = 0;
-    public final int INDEX_EDUCATION = 1;
-    public final int INDEX_ENTERTAINMENT = 2;
-    public final int INDEX_TECHNOLOGY = 3;
-    public final int INDEX_LAWS = 4;
-    public final int INDEX_NEWS = 5;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +57,7 @@ public class NewsFragment extends BaseFragment implements CategoryAdapter.OnItem
         mRecyclerView.setAdapter(mCategoryAdapter);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mRecyclerView.addItemDecoration(new GridViewItemDecoration(getContext()));
-        mCategoryAdapter.setmOnItemListener(this);
+        mCategoryAdapter.setOnItemListener(this);
     }
 
     private void addItemListNews(List<Category> list) {
@@ -72,7 +67,6 @@ public class NewsFragment extends BaseFragment implements CategoryAdapter.OnItem
         Bitmap image_technology = BitmapFactory.decodeResource(this.getResources(), R.drawable.technology);
         Bitmap image_law = BitmapFactory.decodeResource(this.getResources(), R.drawable.law);
         Bitmap image_new = BitmapFactory.decodeResource(this.getResources(), R.drawable.news);
-
         Category category_business = new Category(image_business, getString(R.string.business));
         Category category_education = new Category(image_education, getString(R.string.education));
         Category category_entertainment = new Category(image_entertainment, getString(R.string.entertainment));
@@ -89,10 +83,10 @@ public class NewsFragment extends BaseFragment implements CategoryAdapter.OnItem
 
     @Override
     public void onClickItem(int position) {
-        switch (position) {
-            case INDEX_TECHNOLOGY:
-                getBaseActivity().replaceFragment(new ListNewsFragment(), TAG_NEWS_FRAGMENT);
-                break;
-        }
+        ListNewsFragment fragment = new ListNewsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.BUNDLE_INDEX, position);
+        fragment.setArguments(bundle);
+        getBaseActivity().replaceFragment(fragment, TAG_NEWS_FRAGMENT);
     }
 }

@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.framgia.rssfeed.R;
+import com.framgia.rssfeed.fragment.HomeFragment;
+import com.framgia.rssfeed.fragment.ListNewsFragment;
 
 /**
  * Created by yue on 21/04/2016.
@@ -20,6 +22,38 @@ public abstract class BaseActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private Toolbar mToolbar;
+    private NavigationView.OnNavigationItemSelectedListener mNavigationItemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(MenuItem item) {
+            ListNewsFragment fragment = new ListNewsFragment();
+            Bundle bundle = new Bundle();
+            switch (item.getItemId()) {
+                case R.id.nav_news:
+                    bundle.putInt(Constants.BUNDLE_INDEX, Constants.INDEX_NEWS);
+                    break;
+                case R.id.nav_technology:
+                    bundle.putInt(Constants.BUNDLE_INDEX, Constants.INDEX_TECHNOLOGY);
+                    break;
+                case R.id.nav_business:
+                    bundle.putInt(Constants.BUNDLE_INDEX, Constants.INDEX_BUSINESS);
+                    break;
+                case R.id.nav_law:
+                    bundle.putInt(Constants.BUNDLE_INDEX, Constants.INDEX_LAWS);
+                    break;
+                case R.id.nav_entertainment:
+                    bundle.putInt(Constants.BUNDLE_INDEX, Constants.INDEX_ENTERTAINMENT);
+                    break;
+                case R.id.nav_education:
+                    bundle.putInt(Constants.BUNDLE_INDEX, Constants.INDEX_EDUCATION);
+                    break;
+            }
+            item.setChecked(true);
+            getDrawerLayout().closeDrawer(GravityCompat.START);
+            fragment.setArguments(bundle);
+            replaceFragment(fragment, HomeFragment.TAG_HOME_FRAGMENT);
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +105,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         return mDrawerLayout;
     }
 
+    public NavigationView getNavigationView() {
+        return mNavigationView;
+    }
+
     protected abstract BaseFragment getFragment();
 
     protected abstract void onCreateContentView();
@@ -82,18 +120,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         return null;
     }
 
-    private NavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(MenuItem item) {
-            item.setChecked(true);
-            return false;
-        }
-    };
-
     private void findViews() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mNavigationView.setNavigationItemSelectedListener(navigationItemSelectedListener);
+        mNavigationView.setNavigationItemSelectedListener(mNavigationItemSelectedListener);
     }
 }

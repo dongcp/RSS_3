@@ -13,6 +13,7 @@ import com.framgia.rssfeed.base.BaseFragment;
  */
 public class HomeFragment extends BaseFragment {
 
+    public final static String TAG_HOME_FRAGMENT = "home fragment";
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     private TabFragmentAdapter mTabFragmentAdapter;
@@ -25,6 +26,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void onCreateContentView(View rootView) {
         findView(rootView);
+        resetNavigationView();
     }
 
     @Override
@@ -44,5 +46,14 @@ public class HomeFragment extends BaseFragment {
         mTabFragmentAdapter.addFragment(new NewsFragment(), getString(R.string.news_uppercase));
         mTabFragmentAdapter.addFragment(new HistoryFragment(), getString(R.string.history_uppercase));
         mViewPager.setAdapter(mTabFragmentAdapter);
+    }
+
+    private void resetNavigationView() {
+        getBaseActivity().getNavigationView().getMenu().findItem(R.id.nav_technology).setChecked(false);
+        getBaseActivity().getNavigationView().getMenu().findItem(R.id.nav_business).setChecked(false);
+        getBaseActivity().getNavigationView().getMenu().findItem(R.id.nav_education).setChecked(false);
+        getBaseActivity().getNavigationView().getMenu().findItem(R.id.nav_entertainment).setChecked(false);
+        getBaseActivity().getNavigationView().getMenu().findItem(R.id.nav_news).setChecked(false);
+        getBaseActivity().getNavigationView().getMenu().findItem(R.id.nav_law).setChecked(false);
     }
 }

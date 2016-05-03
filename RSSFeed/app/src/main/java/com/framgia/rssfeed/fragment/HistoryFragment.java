@@ -15,7 +15,6 @@ public class HistoryFragment extends BaseFragment {
 
     @Override
     protected void onCreateContentView(View rootView) {
-
     }
 
     @Override

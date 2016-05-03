@@ -18,78 +18,77 @@ import java.util.List;
 /**
  * Created by VULAN on 4/23/2016.
  */
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.viewHolder> {
+public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
-    private List<Category> mlistNew;
+    private List<Category> mListNews;
     private LayoutInflater mInflater;
-    private OnItemListener mOnItemListener;
+    private OnItemClickListener mOnItemClickListener;
 
-    public CategoryAdapter(Context context, List<Category> mlistNew) {
+    public CategoryAdapter(Context context, List<Category> listNews) {
         mInflater = LayoutInflater.from(context);
-        this.mlistNew = mlistNew;
+        this.mListNews = listNews;
     }
 
     @Override
-    public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_category, parent, false);
         if (view == null) {
             view = mInflater.inflate(R.layout.item_category, parent, false);
         }
-        viewHolder viewHolder = new viewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(final viewHolder holder, final int position) {
-        final Category category = mlistNew.get(position);
-        holder.setTextNew(category.getText());
-        holder.setImagetNew(category.getImage());
-        holder.getImageNew().setOnClickListener(new View.OnClickListener() {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        final Category category = mListNews.get(position);
+        holder.setTitle(category.getText());
+        holder.setImageCategory(category.getImage());
+        holder.getImageCategory().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnItemListener.onClickItem(position);
+                mOnItemClickListener.onClickItem(position);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mlistNew.size();
+        return mListNews == null ? 0 : mListNews.size();
     }
 
-    public void setmOnItemListener(OnItemListener mOnItemListener) {
-        this.mOnItemListener = mOnItemListener;
+    public void setOnItemListener(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
     }
 
-    public class viewHolder extends RecyclerView.ViewHolder {
-        private ImageView mImageNew;
-        private TextView mTextNew;
-
-        public viewHolder(View itemView) {
-            super(itemView);
-            mImageNew = (ImageView) itemView.findViewById(R.id.image_news);
-            mTextNew = (TextView) itemView.findViewById(R.id.text_news);
-        }
-
-        public void setImagetNew(Bitmap bitmap) {
-            mImageNew.setImageBitmap(bitmap);
-        }
-
-        public void setTextNew(String text) {
-            mTextNew.setText(text);
-        }
-
-        public ImageView getImageNew() {
-            return mImageNew;
-        }
-
-        public TextView getTextNew() {
-            return mTextNew;
-        }
-    }
-
-    public interface OnItemListener {
+    public interface OnItemClickListener {
         void onClickItem(int position);
     }
 
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView mImageCategory;
+        private TextView mTitle;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            mImageCategory = (ImageView) itemView.findViewById(R.id.image_news);
+            mTitle = (TextView) itemView.findViewById(R.id.text_news);
+        }
+
+        public void setImageCategory(Bitmap bitmap) {
+            mImageCategory.setImageBitmap(bitmap);
+        }
+
+        public ImageView getImageCategory() {
+            return mImageCategory;
+        }
+
+        public TextView getTitle() {
+            return mTitle;
+        }
+
+        public void setTitle(String text) {
+            mTitle.setText(text);
+        }
+    }
 }
