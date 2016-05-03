@@ -17,7 +17,6 @@ public class SplashActivity extends AppCompatActivity {
         waitUntilFinishInitializing();
     }
 
-
     public void waitUntilFinishInitializing() {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

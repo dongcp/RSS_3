@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--common size-->
+    <dimen name="common_size_2">2dp</dimen>
+    <dimen name="common_size_3">3dp</dimen>
+    <dimen name="common_size_4">4dp</dimen>
     <dimen name="common_size_5">5dp</dimen>
+    <dimen name="common_size_6">6dp</dimen>
+    <dimen name="common_size_7">7dp</dimen>
+    <dimen name="common_size_8">8dp</dimen>
+    <dimen name="common_size_9">9dp</dimen>
     <dimen name="common_size_10">10dp</dimen>
     <dimen name="common_size_15">15dp</dimen>
     <dimen name="common_size_80">80dp</dimen>

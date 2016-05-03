@@ -14,5 +14,4 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreateContentView() {
     }
-
 }

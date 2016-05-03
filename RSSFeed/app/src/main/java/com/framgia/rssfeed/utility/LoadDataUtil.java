@@ -14,9 +14,9 @@ import java.util.ArrayList;
  */
 public class LoadDataUtil {
 
+    private static LoadDataUtil sInstance;
     private XmlParser mParser;
     private OnLoadingListener mOnLoadingListener;
-    private static LoadDataUtil sInstance;
 
     private LoadDataUtil() {
         mParser = new XmlParser();
@@ -67,6 +67,7 @@ public class LoadDataUtil {
 
     public interface OnLoadingListener {
         void onLoading();
+
         void onLoadComplete(ArrayList<Object> objects);
     }
 
