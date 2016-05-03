@@ -189,7 +189,5 @@ public class ListNewsFragment extends BaseFragment {
                 newsTitle.setSelected(true);
             }
         }
-
     }
-
 }

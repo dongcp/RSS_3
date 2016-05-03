@@ -7,7 +7,7 @@ import com.framgia.rssfeed.base.BaseFragment;
 
 
 public class HistoryFragment extends BaseFragment {
-    
+
     @Override
     protected int getFragmentLayoutId() {
         return R.layout.fragment_history;
@@ -18,4 +18,8 @@ public class HistoryFragment extends BaseFragment {
 
     }
 
+    @Override
+    protected boolean enableBackButton() {
+        return false;
+    }
 }

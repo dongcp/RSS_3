@@ -69,5 +69,4 @@ public class News {
         }
         return tmp;
     }
-
 }

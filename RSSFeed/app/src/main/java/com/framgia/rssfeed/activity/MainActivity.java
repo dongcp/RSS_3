@@ -1,4 +1,4 @@
-package com.framgia.rssfeed;
+package com.framgia.rssfeed.activity;
 
 import com.framgia.rssfeed.base.BaseActivity;
 import com.framgia.rssfeed.base.BaseFragment;

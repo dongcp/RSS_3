@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">RSSFeed</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_news">News</string>
+    <string name="title_technology">Technology</string>
+    <string name="title_education">Education</string>
+    <string name="title_business">Business</string>
+    <string name="title_entertainment">Entertainment</string>
+    <string name="title_law">Law</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -18,5 +24,4 @@
     <string name="entertainment">Entertainment</string>
     <string name="news_uppercase">NEWS</string>
     <string name="history_uppercase">HISTORY</string>
-
 </resources>

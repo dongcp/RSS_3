@@ -12,6 +12,7 @@ import com.framgia.rssfeed.R;
 import com.framgia.rssfeed.adapter.CategoryAdapter;
 import com.framgia.rssfeed.base.BaseFragment;
 import com.framgia.rssfeed.bean.Category;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,6 @@ public class NewsFragment extends BaseFragment implements CategoryAdapter.OnItem
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -43,6 +43,11 @@ public class NewsFragment extends BaseFragment implements CategoryAdapter.OnItem
     @Override
     protected void onCreateContentView(View rootView) {
         findView(rootView);
+    }
+
+    @Override
+    protected boolean enableBackButton() {
+        return false;
     }
 
     private void findView(View view) {
@@ -80,7 +85,6 @@ public class NewsFragment extends BaseFragment implements CategoryAdapter.OnItem
         list.add(category_technology);
         list.add(category_law);
         list.add(category_new);
-
     }
 
     @Override
@@ -91,5 +95,4 @@ public class NewsFragment extends BaseFragment implements CategoryAdapter.OnItem
                 break;
         }
     }
-
 }

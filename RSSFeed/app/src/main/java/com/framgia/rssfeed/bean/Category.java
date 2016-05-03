@@ -30,5 +30,4 @@ public class Category {
     public void setText(String mText) {
         this.mText = mText;
     }
-
 }

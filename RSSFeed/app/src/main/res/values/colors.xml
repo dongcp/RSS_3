@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="drawer_background_checked_color">#9b7b7b</color>
+    <color name="drawer_background_pressed_color">#E6CDCD</color>
+    <color name="drawer_item_highlight_color">#2CF915</color>
 </resources>

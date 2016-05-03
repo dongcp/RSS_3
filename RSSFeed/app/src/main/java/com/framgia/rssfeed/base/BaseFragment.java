@@ -2,6 +2,8 @@ package com.framgia.rssfeed.base;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,14 +33,33 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getBaseActivity().getSupportActionBar().setTitle(getTitle());
-        getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(enableBackButton());
+        if (enableBackButton()) {
+            getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getBaseActivity().getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+            getBaseActivity().getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        } else {
+            if (enableNavigationDrawer()) {
+                getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getBaseActivity().getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+                getBaseActivity().getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            } else {
+                getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                getBaseActivity().getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                if (enableBackButton()) {
+                    onBackPressed();
+                } else {
+                    if (enableNavigationDrawer()) {
+                        getBaseActivity().getDrawerLayout().openDrawer(GravityCompat.START);
+                    }
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -49,7 +70,11 @@ public abstract class BaseFragment extends Fragment {
     protected abstract void onCreateContentView(View rootView);
 
     protected void onBackPressed() {
-        getBaseActivity().popFragment();
+        if (getBaseActivity().getDrawerLayout().isDrawerOpen(GravityCompat.START)) {
+            getBaseActivity().getDrawerLayout().closeDrawer(GravityCompat.START);
+        } else {
+            getBaseActivity().popFragment();
+        }
     }
 
     protected BaseActivity getBaseActivity() {
@@ -64,4 +89,7 @@ public abstract class BaseFragment extends Fragment {
         return true;
     }
 
+    protected boolean enableNavigationDrawer() {
+        return true;
+    }
 }
