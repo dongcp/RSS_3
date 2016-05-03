@@ -47,7 +47,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         holder.getImageCategory().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnItemClickListener.onClickItem(position);
+                if(mOnItemClickListener!=null){
+                    mOnItemClickListener.onClickItem(position);
+                }
             }
         });
     }
