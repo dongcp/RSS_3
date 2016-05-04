@@ -31,5 +31,4 @@ public class ListViewItemDecoration extends RecyclerView.ItemDecoration {
         outRect.right = mSpace;
         outRect.bottom = mSpace;
     }
-
 }

@@ -2,9 +2,13 @@ package com.framgia.rssfeed.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.framgia.rssfeed.ListViewItemDecoration;
 import com.framgia.rssfeed.OnRecyclerViewItemClickListener;
@@ -16,21 +20,20 @@ import com.framgia.rssfeed.bean.News;
 import com.framgia.rssfeed.data.local.DatabaseHandler;
 
 
-public class HistoryFragment extends BaseFragment implements OnRecyclerViewItemClickListener {
+public class HistoryFragment extends Fragment implements OnRecyclerViewItemClickListener {
 
     private RecyclerView mRecyclerView;
     private ListNewsAdapter mListHistoryAdapter;
 
-
     @Override
-    protected int getFragmentLayoutId() {
-        return R.layout.fragment_new;
-    }
-
-    @Override
-    protected void onCreateContentView(View rootView) {
-        findView(rootView);
-        setupRecyclerView(getContext());
+    public void onItemClickListener(View view, int position) {
+        News news = mListHistoryAdapter.getItem(position);
+        DatabaseHandler.getInstance(getActivity()).insertNewsInfo(news);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.BUNDLE_NEWS, news);
+        ShowDetailFragment fragment = new ShowDetailFragment();
+        fragment.setArguments(bundle);
+        replaceFragment(fragment, ListNewsFragment.TAG_LIST_NEWS_FRAGMENT);
     }
 
     public void findView(View view) {
@@ -38,7 +41,7 @@ public class HistoryFragment extends BaseFragment implements OnRecyclerViewItemC
     }
 
     public void setupRecyclerView(Context context) {
-        ListViewItemDecoration mListViewItemDecoration= new ListViewItemDecoration(context);;
+        ListViewItemDecoration mListViewItemDecoration = new ListViewItemDecoration(context);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.addItemDecoration(mListViewItemDecoration);
         mListHistoryAdapter = new ListNewsAdapter(context, mRecyclerView.getLayoutManager());
@@ -47,20 +50,19 @@ public class HistoryFragment extends BaseFragment implements OnRecyclerViewItemC
         mRecyclerView.setAdapter(mListHistoryAdapter);
     }
 
-    @Override
-    protected boolean enableBackButton() {
-        return false;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_news, container, false);
+        findView(view);
+        setupRecyclerView(getActivity());
+        return view;
     }
 
-
-    @Override
-    public void onItemClickListener(int position) {
-        News news = mListHistoryAdapter.getItem(position);
-        DatabaseHandler.getInstance(getActivity()).insertNewsInfo(news);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.BUNDLE_URL, news.getLink());
-        ShowDetailFragment fragment = new ShowDetailFragment();
-        fragment.setArguments(bundle);
-        getBaseActivity().replaceFragment(fragment, ListNewsFragment.TAG_LIST_NEWS_FRAGMENT);
+    private void replaceFragment(BaseFragment fragment, String tag) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.fragment_slide_right_enter, R.anim.fragment_slide_left_exit,
+                R.anim.fragment_slide_left_enter, R.anim.fragment_slide_right_exit)
+                .replace(R.id.fragmentContainer, fragment, tag)
+                .addToBackStack("")
+                .commit();
     }
 }

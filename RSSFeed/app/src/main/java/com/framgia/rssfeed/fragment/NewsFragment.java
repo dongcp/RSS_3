@@ -3,9 +3,13 @@ package com.framgia.rssfeed.fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.framgia.rssfeed.GridViewItemDecoration;
 import com.framgia.rssfeed.R;
@@ -17,8 +21,7 @@ import com.framgia.rssfeed.bean.Category;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class NewsFragment extends BaseFragment implements CategoryAdapter.OnItemClickListener {
+public class NewsFragment extends Fragment implements CategoryAdapter.OnItemClickListener {
 
     public static final String TAG_NEWS_FRAGMENT = "NEW_FRAGMENT";
     private CategoryAdapter mCategoryAdapter;
@@ -31,18 +34,10 @@ public class NewsFragment extends BaseFragment implements CategoryAdapter.OnItem
     }
 
     @Override
-    protected int getFragmentLayoutId() {
-        return R.layout.fragment_new;
-    }
-
-    @Override
-    protected void onCreateContentView(View rootView) {
-        findView(rootView);
-    }
-
-    @Override
-    protected boolean enableBackButton() {
-        return false;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_news, container, false);
+        findView(view);
+        return view;
     }
 
     private void findView(View view) {
@@ -87,6 +82,15 @@ public class NewsFragment extends BaseFragment implements CategoryAdapter.OnItem
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.BUNDLE_INDEX, position);
         fragment.setArguments(bundle);
-        getBaseActivity().replaceFragment(fragment, TAG_NEWS_FRAGMENT);
+        replaceFragment(fragment, TAG_NEWS_FRAGMENT);
+    }
+
+    private void replaceFragment(BaseFragment fragment, String tag) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.fragment_slide_right_enter, R.anim.fragment_slide_left_exit,
+                R.anim.fragment_slide_left_enter, R.anim.fragment_slide_right_exit)
+                .replace(R.id.fragmentContainer, fragment, tag)
+                .addToBackStack("")
+                .commit();
     }
 }

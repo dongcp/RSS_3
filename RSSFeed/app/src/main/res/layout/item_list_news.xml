@@ -21,16 +21,16 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/common_size_10" />
 
-        <LinearLayout
-            android:id="@+id/item_news_layout"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/newsTitle"
+                android:id="@+id/news_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/image_favorite"
                 android:ellipsize="marquee"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
@@ -40,7 +40,6 @@
                 android:paddingRight="@dimen/common_size_10"
                 android:paddingTop="@dimen/common_size_5"
                 android:singleLine="true"
-                android:text="Aloha"
                 android:textColor="@color/black"
                 android:textSize="@dimen/common_text_size_8"
                 android:textStyle="bold" />
@@ -49,6 +48,8 @@
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/news_title"
+                android:layout_toLeftOf="@+id/image_favorite"
                 android:ellipsize="end"
                 android:gravity="top"
                 android:maxLines="3"
@@ -56,8 +57,17 @@
                 android:paddingLeft="@dimen/common_size_15"
                 android:paddingRight="@dimen/common_size_10"
                 android:paddingTop="@dimen/common_size_5"
-                android:text="Ahihi"
                 android:textSize="@dimen/common_text_size_5" />
-        </LinearLayout>
+
+            <ImageView
+                android:id="@+id/image_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:padding="@dimen/common_size_10"
+                android:src="@drawable/ic_normal_star" />
+        </RelativeLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

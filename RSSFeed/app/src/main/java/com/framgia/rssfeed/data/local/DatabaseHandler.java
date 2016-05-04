@@ -16,14 +16,18 @@ import java.util.HashMap;
  */
 public class DatabaseHandler {
 
-    private DatabaseHelper mDatabaseHelper;
-    private SQLiteDatabase mSQLiteDatabase;
     public static final String TABLE = "news_information";
     public static final String TITLE = "title";
     public static final String IMAGE_URL = "imageUrl";
     public static final String LINK = "link";
     public static final String DESCRIPTION = "description";
     private static DatabaseHandler sInstance;
+    private DatabaseHelper mDatabaseHelper;
+    private SQLiteDatabase mSQLiteDatabase;
+
+    public DatabaseHandler(Context context) {
+        mDatabaseHelper = new DatabaseHelper(context);
+    }
 
     public static DatabaseHandler getInstance(Context context) {
         if (sInstance == null) {
@@ -36,25 +40,12 @@ public class DatabaseHandler {
         return sInstance;
     }
 
-    public DatabaseHandler(Context context) {
-        mDatabaseHelper = new DatabaseHelper(context);
-    }
-
     public void open() throws SQLException {
-        try {
-            mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
     }
 
     public void close() throws SQLException {
-        try {
-            mDatabaseHelper.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        mDatabaseHelper.close();
     }
 
     public void insertNewsInfo(News news) {
@@ -71,17 +62,15 @@ public class DatabaseHandler {
     public ArrayList<News> getHistoryNews() {
         open();
         ArrayList<News> newsList = new ArrayList<>();
-
         String[] columns = {TITLE, IMAGE_URL, LINK, DESCRIPTION};
         Cursor cursor = mSQLiteDatabase.query(true, TABLE, columns,
                 null, null, null, null, null, null);
         cursor.moveToFirst();
         HashMap<String, Integer> collumnCache = new HashMap<>();
         collumnCache.put(TITLE, cursor.getColumnIndex(TITLE));
-        collumnCache.put(IMAGE_URL,cursor.getColumnIndex(IMAGE_URL));
+        collumnCache.put(IMAGE_URL, cursor.getColumnIndex(IMAGE_URL));
         collumnCache.put(LINK, cursor.getColumnIndex(LINK));
         collumnCache.put(DESCRIPTION, cursor.getColumnIndex(DESCRIPTION));
-
         while (!cursor.isAfterLast()) {
             News news = new News();
             news.setTitle(cursor.getString(collumnCache.get(TITLE)));

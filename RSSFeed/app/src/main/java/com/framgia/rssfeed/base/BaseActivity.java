@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -63,6 +64,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         addFragment();
         onCreateContentView();
+        mToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
     }
 
     @Override
@@ -107,6 +109,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public NavigationView getNavigationView() {
         return mNavigationView;
+    }
+
+    public Toolbar getToolbar() {
+        return mToolbar;
     }
 
     protected abstract BaseFragment getFragment();

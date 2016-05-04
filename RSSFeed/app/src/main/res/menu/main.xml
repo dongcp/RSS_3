@@ -2,8 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/action_favorite"
+        android:checkable="true"
+        android:checked="false"
+        android:icon="@drawable/ic_normal_star"
+        android:title="@string/action_favorite"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_switch"
+        android:title="@string/action_switch"
+        app:showAsAction="always" />
 </menu>

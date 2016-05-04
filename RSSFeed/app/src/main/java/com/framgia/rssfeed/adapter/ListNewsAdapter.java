@@ -1,6 +1,7 @@
 package com.framgia.rssfeed.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -27,7 +28,7 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsAdapter.ItemHo
     private Context mContext;
     private ArrayList<News> mNewsList;
     private RecyclerView.LayoutManager mLayoutManager;
-    private OnRecyclerViewItemClickListener mOnRecyclerViewItemClickListener;
+    private OnRecyclerViewItemClickListener mOnItemClickListener;
 
     public ListNewsAdapter(Context context, RecyclerView.LayoutManager layoutManager) {
         mNewsList = new ArrayList<>();
@@ -35,24 +36,24 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsAdapter.ItemHo
         mContext = context;
     }
 
+    public void setOnRecyclerViewItemClickListener(OnRecyclerViewItemClickListener onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
+    }
+
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView;
         if (mLayoutManager instanceof GridLayoutManager) {
-            itemView = LayoutInflater.from(mContext)
-                                     .inflate(com.framgia.rssfeed.R.layout.item_grid_news,
-                                               parent, false);
+            itemView = LayoutInflater.from(mContext).inflate(R.layout.item_grid_news, parent, false);
         } else {
-            itemView = LayoutInflater.from(mContext)
-                                     .inflate(com.framgia.rssfeed.R.layout.item_list_news,
-                                               parent, false);
+            itemView = LayoutInflater.from(mContext).inflate(R.layout.item_list_news, parent, false);
         }
         return new ItemHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(ItemHolder holder, final int position) {
-        final News news = mNewsList.get(position);
+    public void onBindViewHolder(final ItemHolder holder, final int position) {
+        News news = mNewsList.get(position);
         if (TextUtils.isEmpty(news.getImageUrl())) {
             holder.imageNews.setVisibility(View.GONE);
         } else {
@@ -61,11 +62,24 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsAdapter.ItemHo
         }
         holder.newsTitle.setText(news.getTitle());
         holder.description.setText(Html.fromHtml(news.getDescription()));
-        holder.layoutNews.setOnClickListener(new View.OnClickListener() {
+        holder.linearItemNews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mOnRecyclerViewItemClickListener != null) {
-                    mOnRecyclerViewItemClickListener.onItemClickListener(position);
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onItemClickListener(holder.linearItemNews, position);
+                }
+            }
+        });
+        if (news.isFavorite()) {
+            holder.imageFavorite.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_highlight_star));
+        } else {
+            holder.imageFavorite.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_normal_star));
+        }
+        holder.imageFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onItemClickListener(holder.imageFavorite, position);
                 }
             }
         });
@@ -85,6 +99,7 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsAdapter.ItemHo
         mNewsList.addAll(newsList);
         notifyDataSetChanged();
     }
+
     public News getItem(int position) {
         return mNewsList.get(position);
     }
@@ -94,25 +109,30 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsAdapter.ItemHo
         notifyDataSetChanged();
     }
 
-    public void setOnRecyclerViewItemClickListener(OnRecyclerViewItemClickListener mOnRecyclerViewItemClickListener) {
-        this.mOnRecyclerViewItemClickListener = mOnRecyclerViewItemClickListener;
+    public boolean isAllFavorite() {
+        int arraySize = mNewsList.size();
+        for (int i = 0; i < arraySize; i++) {
+            if (!mNewsList.get(i).isFavorite()) return false;
+        }
+        return true;
     }
 
-     public class ItemHolder extends RecyclerView.ViewHolder {
+    class ItemHolder extends RecyclerView.ViewHolder {
 
         public TextView newsTitle;
         public ImageView imageNews;
         public TextView description;
-        public LinearLayout layoutNews;
+        public LinearLayout linearItemNews;
+        public ImageView imageFavorite;
 
         public ItemHolder(View itemView) {
             super(itemView);
-            layoutNews = (LinearLayout) itemView.findViewById(R.id.item_news_layout);
-            newsTitle = (TextView) itemView.findViewById(com.framgia.rssfeed.R.id.newsTitle);
-            imageNews = (ImageView) itemView.findViewById(com.framgia.rssfeed.R.id.image_news);
-            description = (TextView) itemView.findViewById(com.framgia.rssfeed.R.id.description);
+            newsTitle = (TextView) itemView.findViewById(R.id.news_title);
+            imageNews = (ImageView) itemView.findViewById(R.id.image_news);
+            description = (TextView) itemView.findViewById(R.id.description);
+            linearItemNews = (LinearLayout) itemView.findViewById(R.id.linear_item_news);
+            imageFavorite = (ImageView) itemView.findViewById(R.id.image_favorite);
             newsTitle.setSelected(true);
         }
     }
-
 }

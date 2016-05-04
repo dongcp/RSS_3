@@ -11,4 +11,5 @@
     <color name="drawer_item_highlight_color">#2CF915</color>
     <color name="raised_button_normal_color">#FFFFFF</color>
     <color name="raised_button_highlight_color">#88f1ecec</color>
+    <color name="star_color">#EAF515</color>
 </resources>

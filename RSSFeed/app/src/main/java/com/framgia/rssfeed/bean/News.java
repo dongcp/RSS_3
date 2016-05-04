@@ -8,18 +8,22 @@ import java.io.Serializable;
 public class News implements Serializable {
 
     private final static String START_SUBSTRING = "src";
+    private final static String TAG_IMAGE = "img";
     private String mTitle;
     private String mImageUrl;
     private String mLink;
     private String mDescription;
+    private boolean mIsFavorite;
 
     public News() {
+        mIsFavorite = false;
     }
 
-    public News(String title, String link, String imageUrl) {
+    public News(String title, String link, String imageUrl, boolean isFavorite) {
         mTitle = title;
         mLink = link;
         mImageUrl = imageUrl;
+        mIsFavorite = isFavorite;
     }
 
     public String getTitle() {
@@ -51,8 +55,16 @@ public class News implements Serializable {
     }
 
     public void setDescription(String description) {
-        mDescription = description;
+        mDescription = retrieveDescription(description);
         mImageUrl = retrieveImageUrl(description);
+    }
+
+    public boolean isFavorite() {
+        return mIsFavorite;
+    }
+
+    public void setFavorite(boolean isFavorite) {
+        mIsFavorite = isFavorite;
     }
 
     private String retrieveImageUrl(String description) {
@@ -70,5 +82,19 @@ public class News implements Serializable {
             if (count == 2) break;
         }
         return tmp;
+    }
+
+    private String retrieveDescription(String description) {
+        if (!description.contains(TAG_IMAGE))
+            return description;
+        int startIndex = description.indexOf(TAG_IMAGE) - 1;
+        int endIndex = 0;
+        for (int i = startIndex; i < description.length(); i++) {
+            if (description.charAt(i) == '>') {
+                endIndex = i;
+                break;
+            }
+        }
+        return (description.substring(0, startIndex) + description.substring(endIndex + 1, description.length()));
     }
 }

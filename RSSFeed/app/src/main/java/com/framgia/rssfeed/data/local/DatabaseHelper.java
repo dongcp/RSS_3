@@ -9,11 +9,11 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+    public static final String DATABASE_NAME = "db_history_news";
+    public static final int VERSION = 10;
     private String create_table = "CREATE TABLE [news_information]" +
             "(title TEXT, imageUrl TEXT,link TEXT,description TEXT)";
     private String drop_table = "DROP TABLE IF EXITS [new]";
-    public static final String DATABASE_NAME = "db_history_news";
-    public static final int VERSION =10;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
