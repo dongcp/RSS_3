@@ -79,7 +79,7 @@ public class DatabaseHandler {
         HashMap<String, Integer> collumnCache = new HashMap<>();
         collumnCache.put(TITLE, cursor.getColumnIndex(TITLE));
         collumnCache.put(IMAGE_URL,cursor.getColumnIndex(IMAGE_URL));
-        collumnCache.put(LINK, cursor.getColumnIndex(IMAGE_URL));
+        collumnCache.put(LINK, cursor.getColumnIndex(LINK));
         collumnCache.put(DESCRIPTION, cursor.getColumnIndex(DESCRIPTION));
 
         while (!cursor.isAfterLast()) {
