@@ -74,6 +74,7 @@ public class ListNewsFragment extends BaseFragment {
                 fragment.setArguments(bundle);
                 getBaseActivity().replaceFragment(fragment, TAG_LIST_NEWS_FRAGMENT);
             } else if (view instanceof ImageView) {
+                DatabaseHandler.getInstance(getContext()).insertFavoriteInfo(news,mIndex);
                 news.setFavorite(!news.isFavorite());
                 mAdapter.notifyItemChanged(position);
             }

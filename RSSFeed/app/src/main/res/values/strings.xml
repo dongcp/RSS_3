@@ -25,4 +25,14 @@
     <string name="entertainment">Entertainment</string>
     <string name="news_uppercase">NEWS</string>
     <string name="history_uppercase">HISTORY</string>
+    <string name="title_favorite">Favorite</string>
+
+    <string-array name="title_all">
+        <item>Business</item>
+        <item>Education</item>
+        <item>Entertainment</item>
+        <item>Technology</item>
+        <item>Law</item>
+        <item>News</item>
+    </string-array>
 </resources>

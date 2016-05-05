@@ -27,5 +27,9 @@
             android:id="@+id/nav_law"
             android:icon="@drawable/ic_menu_law"
             android:title="@string/title_law" />
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_normal_star"
+            android:title="@string/title_favorite" />
     </group>
 </menu>
