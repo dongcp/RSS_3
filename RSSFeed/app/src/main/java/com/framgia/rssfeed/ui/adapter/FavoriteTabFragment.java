@@ -11,7 +11,7 @@ import com.framgia.rssfeed.ui.fragment.DetailFavoriteFragment;
  */
 public class FavoriteTabFragment extends FragmentPagerAdapter {
     private static int NUMB_TAB = 6;
-    private String[] titles=new String[NUMB_TAB];
+    private String[] titles = new String[NUMB_TAB];
 
     public FavoriteTabFragment(FragmentManager fm, String[] titles) {
         super(fm);

@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.util;
+package com.framgia.rssfeed.ui.decoration;
 
 import android.content.Context;
 import android.graphics.Rect;

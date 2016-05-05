@@ -11,16 +11,17 @@ import android.widget.LinearLayout;
 
 import com.framgia.rssfeed.R;
 import com.framgia.rssfeed.data.bean.News;
-import com.framgia.rssfeed.data.local.DatabaseHandler;
 import com.framgia.rssfeed.ui.adapter.ListNewsAdapter;
 import com.framgia.rssfeed.ui.base.BaseFragment;
 import com.framgia.rssfeed.ui.base.Constants;
+import com.framgia.rssfeed.ui.decoration.GridViewItemDecoration;
+import com.framgia.rssfeed.ui.decoration.ListViewItemDecoration;
 import com.framgia.rssfeed.ui.widget.LayoutNotifyState;
-import com.framgia.rssfeed.util.GridViewItemDecoration;
-import com.framgia.rssfeed.util.ListViewItemDecoration;
-import com.framgia.rssfeed.util.LoadDataUtil;
+import com.framgia.rssfeed.util.MonitorWorkerThreadUtil;
 import com.framgia.rssfeed.util.NetworkUtil;
 import com.framgia.rssfeed.util.OnRecyclerViewItemClickListener;
+import com.framgia.rssfeed.util.UrlCacheUtil;
+import com.framgia.rssfeed.util.WorkerThread;
 
 import java.util.ArrayList;
 
@@ -38,46 +39,53 @@ public class ListNewsFragment extends BaseFragment {
     private GridViewItemDecoration mGridViewItemDecoration;
     private String mUrl;
     private int mIndex;
-    private LoadDataUtil.OnLoadingListener mOnLoadingListener = new LoadDataUtil.OnLoadingListener() {
-        @Override
-        public void onLoading() {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mNotifyStateLayout.show(LayoutNotifyState.TYPE_LOADING_LAYOUT, mListNews);
-                }
-            });
-        }
-
-        @Override
-        public void onLoadComplete(ArrayList<Object> objects) {
-            if (objects != null) {
-                mNotifyStateLayout.hide(mListNews);
-                for (int i = 0; i < objects.size(); i++) {
-                    mAdapter.addItem((News) objects.get(i));
-                }
-                setFavorite(mAdapter.isAllFavorite());
-            } else {
-                mNotifyStateLayout.show(LayoutNotifyState.TYPE_NO_DATA_LAYOUT, mListNews);
-            }
-        }
-    };
     private OnRecyclerViewItemClickListener mOnItemClickListener = new OnRecyclerViewItemClickListener() {
         @Override
         public void onItemClickListener(View view, int position) {
             News news = mAdapter.getItem(position);
             if (view instanceof LinearLayout) {
-                DatabaseHandler.getInstance(getActivity()).insertNewsInfo(news);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Constants.BUNDLE_NEWS, news);
+                bundle.putInt(Constants.BUNDLE_INDEX, mIndex);
                 ShowDetailFragment fragment = new ShowDetailFragment();
                 fragment.setArguments(bundle);
                 getBaseActivity().replaceFragment(fragment, TAG_LIST_NEWS_FRAGMENT);
             } else if (view instanceof ImageView) {
-                DatabaseHandler.getInstance(getContext()).insertFavoriteInfo(news,mIndex);
+                if (!news.isFavorite()) {
+                    int arraySize = mAdapter.getItemCount();
+                    for (int i = 0; i < arraySize; i++) {
+                        WorkerThread worker = new WorkerThread(getActivity(), WorkerThread.WORK_CACHE, mAdapter.getItem(i));
+                        MonitorWorkerThreadUtil.getInstance().assign(worker);
+                    }
+                } else {
+                    UrlCacheUtil.getInstance().remove(news);
+                }
                 news.setFavorite(!news.isFavorite());
                 mAdapter.notifyItemChanged(position);
             }
+        }
+    };
+    private WorkerThread.OnWorkListener mOnWorkListener = new WorkerThread.OnWorkListener() {
+        @Override
+        public void onWorkDone(final ArrayList<Object> objects) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (objects != null) {
+                        mAdapter.removeAllItemsIfExist();
+                        mNotifyStateLayout.hide(mListNews);
+                        int arraySize = objects.size();
+                        for (int i = 0; i < arraySize; i++) {
+                            News news = (News) objects.get(i);
+                            news.setCategory(mIndex);
+                            mAdapter.addItem(news);
+                        }
+                        setFavorite(mAdapter.isAllFavorite());
+                    } else {
+                        mNotifyStateLayout.show(LayoutNotifyState.TYPE_NO_DATA_LAYOUT, mListNews);
+                    }
+                }
+            });
         }
     };
 
@@ -128,15 +136,24 @@ public class ListNewsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (NetworkUtil.getInstance(getActivity()).isNetworkAvailable()) {
+        if (NetworkUtil.isNetworkAvailable(getActivity())) {
             if (mNotifyStateLayout.getVisibility() == View.VISIBLE) {
                 mNotifyStateLayout.hide(mListNews);
             }
-            LoadDataUtil.getInstance().setOnLoadingListener(mOnLoadingListener);
-            LoadDataUtil.getInstance().getDataFromNetwork(mUrl);
+            WorkerThread workerThread = new WorkerThread(getActivity(), WorkerThread.WORK_LOAD_NEWS_LIST, mUrl);
+            workerThread.setOnWorkListener(mOnWorkListener);
+            MonitorWorkerThreadUtil.getInstance().assign(workerThread);
+            mNotifyStateLayout.show(LayoutNotifyState.TYPE_LOADING_LAYOUT, mListNews);
         } else {
-            mNotifyStateLayout.show(LayoutNotifyState.TYPE_NETWORK_ERROR_LAYOUT, mListNews);
+            if (mAdapter.getItemCount() == 0) {
+                mNotifyStateLayout.show(LayoutNotifyState.TYPE_NETWORK_ERROR_LAYOUT, mListNews);
+            }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -160,19 +177,24 @@ public class ListNewsFragment extends BaseFragment {
     }
 
     @Override
-    protected boolean enableFavoriteButton() {
-        return true;
-    }
-
-    @Override
     protected boolean enableSwitchButton() {
         return true;
     }
 
     @Override
-    protected void onMenuItemClick(MenuItem item) {
+    protected boolean enableFavoriteButton() {
+        return true;
+    }
+
+    @Override
+    protected void onMenuItemClick(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favorite:
+                if (item.isChecked()) {
+                    UrlCacheUtil.getInstance().cache(mAdapter.getNewsList());
+                } else {
+                    UrlCacheUtil.getInstance().remove(mAdapter.getNewsList());
+                }
                 int arraySize = mAdapter.getItemCount();
                 for (int i = 0; i < arraySize; i++) {
                     mAdapter.getItem(i).setFavorite(item.isChecked());

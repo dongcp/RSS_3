@@ -147,13 +147,15 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public void setFavorite(boolean isFavorite) {
-        MenuItem item = getBaseActivity().getToolbar().getMenu().findItem(R.id.action_favorite);
-        item.setChecked(isFavorite);
-        if (isFavorite) {
-            item.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_highlight_star));
-        } else {
-            item.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_normal_star));
+        if (getBaseActivity().getToolbar() != null) {
+            MenuItem item = getBaseActivity().getToolbar().getMenu().findItem(R.id.action_favorite);
+            item.setChecked(isFavorite);
+            if (isFavorite) {
+                item.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_highlight_star));
+            } else {
+                item.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_normal_star));
+            }
+            getBaseActivity().getToolbar().invalidate();
         }
-        getBaseActivity().getToolbar().invalidate();
     }
 }

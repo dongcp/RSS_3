@@ -14,9 +14,9 @@ import java.net.URL;
  */
 public class HttpRequest {
 
-    private final static String REQUEST_METHOD = "GET";
-    private final static int READ_TIMEOUT = 10000;
-    private final static int CONNECT_TIMEOUT = 30000;
+    public final static String REQUEST_METHOD = "GET";
+    public final static int READ_TIMEOUT = 10000;
+    public final static int CONNECT_TIMEOUT = 30000;
     private static HttpRequest sInstance;
     private HttpURLConnection mConnection;
     private InputStream mStream;
@@ -49,23 +49,20 @@ public class HttpRequest {
     }
 
     public void makeConnection(String urlString) throws IOException {
-        disconnect();
+        disconnect(mConnection);
         URL url = new URL(urlString);
         mConnection = (HttpURLConnection) url.openConnection();
         mConnection.setReadTimeout(READ_TIMEOUT);
         mConnection.setConnectTimeout(CONNECT_TIMEOUT);
         mConnection.setRequestMethod(REQUEST_METHOD);
         mConnection.setDoInput(true);
-        connect();
-    }
-
-    public void connect() throws IOException {
+        mConnection.setDoOutput(true);
         mConnection.connect();
     }
 
-    public void disconnect() {
-        if (mConnection != null) {
-            mConnection.disconnect();
+    public void disconnect(HttpURLConnection connection) {
+        if (connection != null) {
+            connection.disconnect();
         }
     }
 
@@ -74,5 +71,4 @@ public class HttpRequest {
             mStream.close();
         }
     }
-
 }
