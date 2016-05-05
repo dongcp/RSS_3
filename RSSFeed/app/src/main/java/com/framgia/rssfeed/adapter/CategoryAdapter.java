@@ -14,7 +14,6 @@ import com.framgia.rssfeed.bean.Category;
 
 import java.util.List;
 
-
 /**
  * Created by VULAN on 4/23/2016.
  */
@@ -47,7 +46,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         holder.getImageCategory().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mOnItemClickListener!=null){
+                if (mOnItemClickListener != null) {
                     mOnItemClickListener.onClickItem(position);
                 }
             }
@@ -77,12 +76,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             mTitle = (TextView) itemView.findViewById(R.id.text_news);
         }
 
-        public void setImageCategory(Bitmap bitmap) {
-            mImageCategory.setImageBitmap(bitmap);
-        }
-
         public ImageView getImageCategory() {
             return mImageCategory;
+        }
+
+        public void setImageCategory(Bitmap bitmap) {
+            mImageCategory.setImageBitmap(bitmap);
         }
 
         public TextView getTitle() {

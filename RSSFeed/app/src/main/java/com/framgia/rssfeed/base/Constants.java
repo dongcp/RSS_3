@@ -16,6 +16,6 @@ public class Constants {
     public final static int INDEX_TECHNOLOGY = 3;
     public final static int INDEX_LAWS = 4;
     public final static int INDEX_NEWS = 5;
-    public final static String BUNDLE_URL = "url";
+    public final static String BUNDLE_NEWS = "news";
     public final static String BUNDLE_INDEX = "index";
 }

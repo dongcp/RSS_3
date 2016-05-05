@@ -10,6 +10,7 @@ import android.webkit.WebViewClient;
 import com.framgia.rssfeed.R;
 import com.framgia.rssfeed.base.BaseFragment;
 import com.framgia.rssfeed.base.Constants;
+import com.framgia.rssfeed.bean.News;
 import com.framgia.rssfeed.utility.NetworkUtil;
 import com.framgia.rssfeed.widget.LayoutNotifyState;
 
@@ -20,7 +21,7 @@ public class ShowDetailFragment extends BaseFragment {
 
     private WebView mWebView;
     private LayoutNotifyState mNotifyStateLayout;
-    private String mUrl;
+    private News mNews;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class ShowDetailFragment extends BaseFragment {
         webSettings.setAppCacheEnabled(true);
         webSettings.setAppCachePath(appCachePath);
         mWebView.setWebViewClient(new RSSWebViewClient());
-        mWebView.loadUrl(mUrl);
+        mWebView.loadUrl(mNews.getLink());
     }
 
     @Override
@@ -54,9 +55,19 @@ public class ShowDetailFragment extends BaseFragment {
         return false;
     }
 
+    @Override
+    protected boolean enableFavoriteButton() {
+        return true;
+    }
+
+    @Override
+    protected boolean isFavorite() {
+        return mNews.isFavorite();
+    }
+
     private void getData() {
         Bundle bundle = getArguments();
-        mUrl = bundle.getString(Constants.BUNDLE_URL, "");
+        mNews = (News) bundle.getSerializable(Constants.BUNDLE_NEWS);
     }
 
     private void findViews(View rootView) {

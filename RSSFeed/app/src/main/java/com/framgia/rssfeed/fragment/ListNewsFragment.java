@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.framgia.rssfeed.GridViewItemDecoration;
 import com.framgia.rssfeed.ListViewItemDecoration;
@@ -53,6 +56,7 @@ public class ListNewsFragment extends BaseFragment {
                 for (int i = 0; i < objects.size(); i++) {
                     mAdapter.addItem((News) objects.get(i));
                 }
+                setFavorite(mAdapter.isAllFavorite());
             } else {
                 mNotifyStateLayout.show(LayoutNotifyState.TYPE_NO_DATA_LAYOUT, mListNews);
             }
@@ -60,17 +64,20 @@ public class ListNewsFragment extends BaseFragment {
     };
     private OnRecyclerViewItemClickListener mOnItemClickListener = new OnRecyclerViewItemClickListener() {
         @Override
-        public void onItemClickListener(int position) {
+        public void onItemClickListener(View view, int position) {
             News news = mAdapter.getItem(position);
-            DatabaseHandler.getInstance(getActivity()).insertNewsInfo(news);
-            Bundle bundle = new Bundle();
-            bundle.putString(Constants.BUNDLE_URL, news.getLink());
-            ShowDetailFragment fragment = new ShowDetailFragment();
-            fragment.setArguments(bundle);
-            getBaseActivity().replaceFragment(fragment, TAG_LIST_NEWS_FRAGMENT);
+            if (view instanceof LinearLayout) {
+                DatabaseHandler.getInstance(getActivity()).insertNewsInfo(news);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Constants.BUNDLE_NEWS, news);
+                ShowDetailFragment fragment = new ShowDetailFragment();
+                fragment.setArguments(bundle);
+                getBaseActivity().replaceFragment(fragment, TAG_LIST_NEWS_FRAGMENT);
+            } else if (view instanceof ImageView) {
+                news.setFavorite(!news.isFavorite());
+                mAdapter.notifyItemChanged(position);
+            }
         }
-
-
     };
 
     @Override
@@ -131,6 +138,62 @@ public class ListNewsFragment extends BaseFragment {
         }
     }
 
+    @Override
+    protected String getTitle() {
+        switch (mIndex) {
+            case Constants.INDEX_BUSINESS:
+                return getString(R.string.business);
+            case Constants.INDEX_EDUCATION:
+                return getString(R.string.education);
+            case Constants.INDEX_ENTERTAINMENT:
+                return getString(R.string.entertainment);
+            case Constants.INDEX_NEWS:
+                return getString(R.string.news);
+            case Constants.INDEX_TECHNOLOGY:
+                return getString(R.string.technology);
+            case Constants.INDEX_LAWS:
+                return getString(R.string.law);
+            default:
+                return getString(R.string.app_name);
+        }
+    }
+
+    @Override
+    protected boolean enableFavoriteButton() {
+        return true;
+    }
+
+    @Override
+    protected boolean enableSwitchButton() {
+        return true;
+    }
+
+    @Override
+    protected void onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_favorite:
+                int arraySize = mAdapter.getItemCount();
+                for (int i = 0; i < arraySize; i++) {
+                    mAdapter.getItem(i).setFavorite(item.isChecked());
+                }
+                mAdapter.notifyDataSetChanged();
+                break;
+            case R.id.action_switch:
+                if (mListNews.getLayoutManager() instanceof GridLayoutManager) {
+                    mListNews.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    mListNews.removeItemDecoration(mGridViewItemDecoration);
+                    mListNews.addItemDecoration(mListViewItemDecoration);
+                } else {
+                    mListNews.setLayoutManager(new GridLayoutManager(getActivity(), NUMBER_OF_COLUMN));
+                    mListNews.removeItemDecoration(mListViewItemDecoration);
+                    mListNews.addItemDecoration(mGridViewItemDecoration);
+                }
+                mListNews.setAdapter(mAdapter);
+                mAdapter.changeLayoutManager(mListNews.getLayoutManager());
+                break;
+        }
+    }
+
     private void getData() {
         Bundle bundle = getArguments();
         mIndex = bundle.getInt(Constants.BUNDLE_INDEX, Constants.INDEX_TECHNOLOGY);
@@ -159,21 +222,5 @@ public class ListNewsFragment extends BaseFragment {
     private void findViews(View rootView) {
         mListNews = (RecyclerView) rootView.findViewById(R.id.list_news);
         mNotifyStateLayout = (LayoutNotifyState) rootView.findViewById(R.id.notify_state_layout);
-        rootView.findViewById(R.id.button_switch).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListNews.getLayoutManager() instanceof GridLayoutManager) {
-                    mListNews.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    mListNews.removeItemDecoration(mGridViewItemDecoration);
-                    mListNews.addItemDecoration(mListViewItemDecoration);
-                } else {
-                    mListNews.setLayoutManager(new GridLayoutManager(getActivity(), NUMBER_OF_COLUMN));
-                    mListNews.removeItemDecoration(mListViewItemDecoration);
-                    mListNews.addItemDecoration(mGridViewItemDecoration);
-                }
-                mListNews.setAdapter(mAdapter);
-                mAdapter.changeLayoutManager(mListNews.getLayoutManager());
-            }
-        });
     }
 }

@@ -4,8 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.framgia.rssfeed.base.BaseFragment;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class TabFragmentAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
-    public void addFragment(BaseFragment fragment, String title) {
+    public void addFragment(Fragment fragment, String title) {
         mFragmentList.add(fragment);
         mTitleFragmentList.add(title);
     }
