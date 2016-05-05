@@ -16,14 +16,17 @@ import java.util.HashMap;
  */
 public class DatabaseHandler {
 
-    public static final String TABLE = "news_information";
+    private DatabaseHelper mDatabaseHelper;
+    private SQLiteDatabase mSQLiteDatabase;
+    public static final String TABLE_NEWS = "news_information";
+    public static final String TABLE_FAVORITE = "favorite";
     public static final String TITLE = "title";
     public static final String IMAGE_URL = "imageUrl";
     public static final String LINK = "link";
     public static final String DESCRIPTION = "description";
+    public static final String CATEGORY = "category";
     private static DatabaseHandler sInstance;
-    private DatabaseHelper mDatabaseHelper;
-    private SQLiteDatabase mSQLiteDatabase;
+
 
     public DatabaseHandler(Context context) {
         mDatabaseHelper = new DatabaseHelper(context);
@@ -40,12 +43,20 @@ public class DatabaseHandler {
         return sInstance;
     }
 
-    public void open() throws SQLException {
-        mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
+    public void open() {
+        try {
+            mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void close() throws SQLException {
-        mDatabaseHelper.close();
+    public void close() {
+        try {
+            mDatabaseHelper.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void insertNewsInfo(News news) {
@@ -55,7 +66,19 @@ public class DatabaseHandler {
         contentValues.put(IMAGE_URL, news.getImageUrl());
         contentValues.put(LINK, news.getLink());
         contentValues.put(DESCRIPTION, news.getDescription());
-        mSQLiteDatabase.insert(TABLE, null, contentValues);
+        mSQLiteDatabase.insert(TABLE_NEWS, null, contentValues);
+        close();
+    }
+
+    public void insertFavoriteInfo(News news, int category) {
+        open();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TITLE, news.getTitle());
+        contentValues.put(IMAGE_URL, news.getImageUrl());
+        contentValues.put(LINK, news.getLink());
+        contentValues.put(DESCRIPTION, news.getDescription());
+        contentValues.put(CATEGORY, category);
+        mSQLiteDatabase.insert(TABLE_FAVORITE, null, contentValues);
         close();
     }
 
@@ -63,8 +86,35 @@ public class DatabaseHandler {
         open();
         ArrayList<News> newsList = new ArrayList<>();
         String[] columns = {TITLE, IMAGE_URL, LINK, DESCRIPTION};
-        Cursor cursor = mSQLiteDatabase.query(true, TABLE, columns,
+        Cursor cursor = mSQLiteDatabase.query(true, TABLE_NEWS, columns,
                 null, null, null, null, null, null);
+        cursor.moveToFirst();
+        HashMap<String, Integer> collumnCache = new HashMap<>();
+        collumnCache.put(TITLE, cursor.getColumnIndex(TITLE));
+        collumnCache.put(IMAGE_URL, cursor.getColumnIndex(IMAGE_URL));
+        collumnCache.put(LINK, cursor.getColumnIndex(LINK));
+        collumnCache.put(DESCRIPTION, cursor.getColumnIndex(DESCRIPTION));
+        while (!cursor.isAfterLast()) {
+            News news = new News();
+            news.setTitle(cursor.getString(collumnCache.get(TITLE)));
+            news.setImageUrl(cursor.getString(collumnCache.get(IMAGE_URL)));
+            news.setLink(cursor.getString(collumnCache.get(LINK)));
+            news.setDescription(cursor.getString(collumnCache.get(DESCRIPTION)));
+            newsList.add(news);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        close();
+        return newsList;
+    }
+
+    public ArrayList<News> getFavoriteNews(int category) {
+        open();
+        ArrayList<News> newsList = new ArrayList<>();
+        String selection = "category= " + category;
+        String[] columns = {TITLE, IMAGE_URL, LINK, DESCRIPTION, CATEGORY};
+        Cursor cursor = mSQLiteDatabase.query(true, TABLE_FAVORITE, columns,
+                selection, null, null, null, null, null);
         cursor.moveToFirst();
         HashMap<String, Integer> collumnCache = new HashMap<>();
         collumnCache.put(TITLE, cursor.getColumnIndex(TITLE));
