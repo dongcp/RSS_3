@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.adapter;
+package com.framgia.rssfeed.ui.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

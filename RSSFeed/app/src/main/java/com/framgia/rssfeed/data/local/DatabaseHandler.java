@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.framgia.rssfeed.bean.News;
+import com.framgia.rssfeed.data.bean.News;
 
 import java.util.ArrayList;
 import java.util.HashMap;

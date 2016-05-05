@@ -1,4 +1,4 @@
-package com.framgia.rssfeed;
+package com.framgia.rssfeed.util;
 
 import android.view.View;
 

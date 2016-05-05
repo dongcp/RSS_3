@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.activity;
+package com.framgia.rssfeed.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

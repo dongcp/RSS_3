@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.fragment;
+package com.framgia.rssfeed.ui.fragment;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -8,11 +8,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.framgia.rssfeed.R;
-import com.framgia.rssfeed.base.BaseFragment;
-import com.framgia.rssfeed.base.Constants;
-import com.framgia.rssfeed.bean.News;
-import com.framgia.rssfeed.utility.NetworkUtil;
-import com.framgia.rssfeed.widget.LayoutNotifyState;
+import com.framgia.rssfeed.data.bean.News;
+import com.framgia.rssfeed.ui.base.BaseFragment;
+import com.framgia.rssfeed.ui.base.Constants;
+import com.framgia.rssfeed.ui.widget.LayoutNotifyState;
+import com.framgia.rssfeed.util.NetworkUtil;
 
 /**
  * Created by yue on 27/04/2016.

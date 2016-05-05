@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.adapter;
+package com.framgia.rssfeed.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.framgia.rssfeed.R;
-import com.framgia.rssfeed.bean.Category;
+import com.framgia.rssfeed.data.bean.Category;
 
 import java.util.List;
 

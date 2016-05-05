@@ -1,8 +1,6 @@
-package com.framgia.rssfeed.utility;
+package com.framgia.rssfeed.util;
 
 import android.os.AsyncTask;
-
-import com.framgia.rssfeed.XmlParser;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -70,5 +68,4 @@ public class LoadDataUtil {
 
         void onLoadComplete(ArrayList<Object> objects);
     }
-
 }

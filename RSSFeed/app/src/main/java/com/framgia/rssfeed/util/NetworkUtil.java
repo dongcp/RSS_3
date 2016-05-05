@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.utility;
+package com.framgia.rssfeed.util;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -31,5 +31,4 @@ public class NetworkUtil {
         NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
-
 }

@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:visibility="visible" />
 
-    <com.framgia.rssfeed.widget.LayoutNotifyState
+    <com.framgia.rssfeed.ui.widget.LayoutNotifyState
         android:id="@+id/notify_state_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

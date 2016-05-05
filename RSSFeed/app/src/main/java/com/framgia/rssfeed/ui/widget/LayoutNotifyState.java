@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.widget;
+package com.framgia.rssfeed.ui.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
