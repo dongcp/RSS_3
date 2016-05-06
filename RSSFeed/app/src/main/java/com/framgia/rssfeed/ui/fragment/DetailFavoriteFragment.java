@@ -19,15 +19,15 @@ import com.framgia.rssfeed.ui.base.Constants;
 import com.framgia.rssfeed.util.ListViewItemDecoration;
 import com.framgia.rssfeed.util.OnRecyclerViewItemClickListener;
 
-
-public class HistoryFragment extends Fragment implements OnRecyclerViewItemClickListener {
-
+public class DetailFavoriteFragment extends Fragment implements OnRecyclerViewItemClickListener {
     private RecyclerView mRecyclerView;
-    private ListNewsAdapter mListHistoryAdapter;
+    private ListNewsAdapter mListFavoriteAdapter;
+    private int mIndex;
 
     @Override
     public void onItemClickListener(View view, int position) {
-        News news = mListHistoryAdapter.getItem(position);
+        News news = mListFavoriteAdapter.getItem(position);
+        DatabaseHandler.getInstance(getActivity()).insertNewsInfo(news);
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.BUNDLE_NEWS, news);
         ShowDetailFragment fragment = new ShowDetailFragment();
@@ -39,14 +39,28 @@ public class HistoryFragment extends Fragment implements OnRecyclerViewItemClick
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_news);
     }
 
+    public static DetailFavoriteFragment newInstance(int category) {
+        DetailFavoriteFragment fragmentDetail = new DetailFavoriteFragment();
+        Bundle args = new Bundle();
+        args.putInt(Constants.BUNDLE_INDEX, category);
+        fragmentDetail.setArguments(args);
+        return fragmentDetail;
+    }
+
+    public void getData() {
+        Bundle bundle = this.getArguments();
+        mIndex = bundle.getInt(Constants.BUNDLE_INDEX);
+        mListFavoriteAdapter.addItems(DatabaseHandler.getInstance(getContext()).getFavoriteNews(mIndex));
+    }
+
     public void setupRecyclerView(Context context) {
         ListViewItemDecoration mListViewItemDecoration = new ListViewItemDecoration(context);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.addItemDecoration(mListViewItemDecoration);
-        mListHistoryAdapter = new ListNewsAdapter(context, mRecyclerView.getLayoutManager());
-        mListHistoryAdapter.addItems(DatabaseHandler.getInstance(context).getHistoryNews());
-        mListHistoryAdapter.setOnRecyclerViewItemClickListener(this);
-        mRecyclerView.setAdapter(mListHistoryAdapter);
+        mListFavoriteAdapter = new ListNewsAdapter(context, mRecyclerView.getLayoutManager());
+        getData();
+        mListFavoriteAdapter.setOnRecyclerViewItemClickListener(this);
+        mRecyclerView.setAdapter(mListFavoriteAdapter);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

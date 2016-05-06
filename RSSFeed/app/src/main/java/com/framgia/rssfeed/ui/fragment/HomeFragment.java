@@ -55,5 +55,6 @@ public class HomeFragment extends BaseFragment {
         getBaseActivity().getNavigationView().getMenu().findItem(R.id.nav_entertainment).setChecked(false);
         getBaseActivity().getNavigationView().getMenu().findItem(R.id.nav_news).setChecked(false);
         getBaseActivity().getNavigationView().getMenu().findItem(R.id.nav_law).setChecked(false);
+        getBaseActivity().getNavigationView().getMenu().findItem(R.id.nav_favorite).setChecked(false);
     }
 }
