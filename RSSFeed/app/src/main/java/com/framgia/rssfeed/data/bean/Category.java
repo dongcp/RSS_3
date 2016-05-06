@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.bean;
+package com.framgia.rssfeed.data.bean;
 
 import android.graphics.Bitmap;
 

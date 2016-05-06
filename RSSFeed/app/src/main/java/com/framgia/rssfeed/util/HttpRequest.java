@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.utility;
+package com.framgia.rssfeed.util;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

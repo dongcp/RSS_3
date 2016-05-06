@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.base;
+package com.framgia.rssfeed.ui.base;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -12,8 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.framgia.rssfeed.R;
-import com.framgia.rssfeed.fragment.HomeFragment;
-import com.framgia.rssfeed.fragment.ListNewsFragment;
+import com.framgia.rssfeed.ui.fragment.HomeFragment;
+import com.framgia.rssfeed.ui.fragment.ListNewsFragment;
 
 /**
  * Created by yue on 21/04/2016.

@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.adapter;
+package com.framgia.rssfeed.ui.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -14,9 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.framgia.rssfeed.OnRecyclerViewItemClickListener;
 import com.framgia.rssfeed.R;
-import com.framgia.rssfeed.bean.News;
+import com.framgia.rssfeed.data.bean.News;
+import com.framgia.rssfeed.util.OnRecyclerViewItemClickListener;
 
 import java.util.ArrayList;
 

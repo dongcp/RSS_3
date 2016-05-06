@@ -1,12 +1,12 @@
-package com.framgia.rssfeed.fragment;
+package com.framgia.rssfeed.ui.fragment;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.framgia.rssfeed.R;
-import com.framgia.rssfeed.adapter.TabFragmentAdapter;
-import com.framgia.rssfeed.base.BaseFragment;
+import com.framgia.rssfeed.ui.adapter.TabFragmentAdapter;
+import com.framgia.rssfeed.ui.base.BaseFragment;
 
 /**
  * Created by yue on 21/04/2016.

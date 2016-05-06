@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.fragment;
+package com.framgia.rssfeed.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,14 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.framgia.rssfeed.ListViewItemDecoration;
-import com.framgia.rssfeed.OnRecyclerViewItemClickListener;
 import com.framgia.rssfeed.R;
-import com.framgia.rssfeed.adapter.ListNewsAdapter;
-import com.framgia.rssfeed.base.BaseFragment;
-import com.framgia.rssfeed.base.Constants;
-import com.framgia.rssfeed.bean.News;
+import com.framgia.rssfeed.data.bean.News;
 import com.framgia.rssfeed.data.local.DatabaseHandler;
+import com.framgia.rssfeed.ui.adapter.ListNewsAdapter;
+import com.framgia.rssfeed.ui.base.BaseFragment;
+import com.framgia.rssfeed.ui.base.Constants;
+import com.framgia.rssfeed.util.ListViewItemDecoration;
+import com.framgia.rssfeed.util.OnRecyclerViewItemClickListener;
 
 
 public class HistoryFragment extends Fragment implements OnRecyclerViewItemClickListener {

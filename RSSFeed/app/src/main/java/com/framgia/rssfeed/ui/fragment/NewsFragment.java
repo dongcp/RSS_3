@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.fragment;
+package com.framgia.rssfeed.ui.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,12 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.framgia.rssfeed.GridViewItemDecoration;
 import com.framgia.rssfeed.R;
-import com.framgia.rssfeed.adapter.CategoryAdapter;
-import com.framgia.rssfeed.base.BaseFragment;
-import com.framgia.rssfeed.base.Constants;
-import com.framgia.rssfeed.bean.Category;
+import com.framgia.rssfeed.data.bean.Category;
+import com.framgia.rssfeed.ui.adapter.CategoryAdapter;
+import com.framgia.rssfeed.ui.base.BaseFragment;
+import com.framgia.rssfeed.ui.base.Constants;
+import com.framgia.rssfeed.util.GridViewItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;

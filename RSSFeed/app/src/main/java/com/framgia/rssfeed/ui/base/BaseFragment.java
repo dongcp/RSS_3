@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.base;
+package com.framgia.rssfeed.ui.base;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

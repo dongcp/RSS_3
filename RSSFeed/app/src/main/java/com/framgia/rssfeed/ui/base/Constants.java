@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.base;
+package com.framgia.rssfeed.ui.base;
 
 /**
  * Created by yue on 03/05/2016.

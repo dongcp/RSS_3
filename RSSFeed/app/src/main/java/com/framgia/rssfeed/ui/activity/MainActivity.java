@@ -1,8 +1,8 @@
-package com.framgia.rssfeed.activity;
+package com.framgia.rssfeed.ui.activity;
 
-import com.framgia.rssfeed.base.BaseActivity;
-import com.framgia.rssfeed.base.BaseFragment;
-import com.framgia.rssfeed.fragment.HomeFragment;
+import com.framgia.rssfeed.ui.base.BaseActivity;
+import com.framgia.rssfeed.ui.base.BaseFragment;
+import com.framgia.rssfeed.ui.fragment.HomeFragment;
 
 public class MainActivity extends BaseActivity {
 

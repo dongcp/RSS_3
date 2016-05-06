@@ -1,4 +1,4 @@
-package com.framgia.rssfeed.fragment;
+package com.framgia.rssfeed.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,18 +9,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.framgia.rssfeed.GridViewItemDecoration;
-import com.framgia.rssfeed.ListViewItemDecoration;
-import com.framgia.rssfeed.OnRecyclerViewItemClickListener;
 import com.framgia.rssfeed.R;
-import com.framgia.rssfeed.adapter.ListNewsAdapter;
-import com.framgia.rssfeed.base.BaseFragment;
-import com.framgia.rssfeed.base.Constants;
-import com.framgia.rssfeed.bean.News;
+import com.framgia.rssfeed.data.bean.News;
 import com.framgia.rssfeed.data.local.DatabaseHandler;
-import com.framgia.rssfeed.utility.LoadDataUtil;
-import com.framgia.rssfeed.utility.NetworkUtil;
-import com.framgia.rssfeed.widget.LayoutNotifyState;
+import com.framgia.rssfeed.ui.adapter.ListNewsAdapter;
+import com.framgia.rssfeed.ui.base.BaseFragment;
+import com.framgia.rssfeed.ui.base.Constants;
+import com.framgia.rssfeed.ui.widget.LayoutNotifyState;
+import com.framgia.rssfeed.util.GridViewItemDecoration;
+import com.framgia.rssfeed.util.ListViewItemDecoration;
+import com.framgia.rssfeed.util.LoadDataUtil;
+import com.framgia.rssfeed.util.NetworkUtil;
+import com.framgia.rssfeed.util.OnRecyclerViewItemClickListener;
 
 import java.util.ArrayList;
 

@@ -1,7 +1,6 @@
-package com.framgia.rssfeed;
+package com.framgia.rssfeed.util;
 
-import com.framgia.rssfeed.bean.News;
-import com.framgia.rssfeed.utility.HttpRequest;
+import com.framgia.rssfeed.data.bean.News;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

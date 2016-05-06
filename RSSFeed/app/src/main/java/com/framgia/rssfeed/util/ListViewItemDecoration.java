@@ -1,9 +1,11 @@
-package com.framgia.rssfeed;
+package com.framgia.rssfeed.util;
 
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.framgia.rssfeed.R;
 
 /**
  * Created by yue on 25/04/2016.
