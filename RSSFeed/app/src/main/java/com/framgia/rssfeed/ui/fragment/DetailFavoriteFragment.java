@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.framgia.rssfeed.R;
 import com.framgia.rssfeed.data.bean.News;
@@ -17,12 +19,16 @@ import com.framgia.rssfeed.ui.adapter.ListNewsAdapter;
 import com.framgia.rssfeed.ui.base.BaseFragment;
 import com.framgia.rssfeed.ui.base.Constants;
 import com.framgia.rssfeed.ui.decoration.ListViewItemDecoration;
+import com.framgia.rssfeed.util.MonitorWorkerThreadUtil;
 import com.framgia.rssfeed.util.OnRecyclerViewItemClickListener;
+import com.framgia.rssfeed.util.UrlCacheUtil;
+import com.framgia.rssfeed.util.WorkerThread;
 
-public class DetailFavoriteFragment extends Fragment implements OnRecyclerViewItemClickListener {
+public class DetailFavoriteFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private ListNewsAdapter mListFavoriteAdapter;
     private int mIndex;
+    public static final String TAG_DETAIL_FAVORITE_FRAGMENT = "detail_favorite_fragment";
 
     public static DetailFavoriteFragment newInstance(int category) {
         DetailFavoriteFragment fragmentDetail = new DetailFavoriteFragment();
@@ -30,17 +36,6 @@ public class DetailFavoriteFragment extends Fragment implements OnRecyclerViewIt
         args.putInt(Constants.BUNDLE_INDEX, category);
         fragmentDetail.setArguments(args);
         return fragmentDetail;
-    }
-
-    @Override
-    public void onItemClickListener(View view, int position) {
-        News news = mListFavoriteAdapter.getItem(position);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.BUNDLE_NEWS, news);
-        bundle.putInt(Constants.BUNDLE_TYPE, ShowDetailFragment.TYPE_FAVORITE);
-        ShowDetailFragment fragment = new ShowDetailFragment();
-        fragment.setArguments(bundle);
-        replaceFragment(fragment, ListNewsFragment.TAG_LIST_NEWS_FRAGMENT);
     }
 
     public void findView(View view) {
@@ -59,7 +54,7 @@ public class DetailFavoriteFragment extends Fragment implements OnRecyclerViewIt
         mRecyclerView.addItemDecoration(mListViewItemDecoration);
         mListFavoriteAdapter = new ListNewsAdapter(context, mRecyclerView.getLayoutManager());
         getData();
-        mListFavoriteAdapter.setOnRecyclerViewItemClickListener(this);
+        mListFavoriteAdapter.setOnRecyclerViewItemClickListener(mOnRecyclerViewItemClickListener);
         mRecyclerView.setAdapter(mListFavoriteAdapter);
     }
 
@@ -78,4 +73,33 @@ public class DetailFavoriteFragment extends Fragment implements OnRecyclerViewIt
                 .addToBackStack("")
                 .commit();
     }
+
+    private OnRecyclerViewItemClickListener mOnRecyclerViewItemClickListener = new OnRecyclerViewItemClickListener() {
+        @Override
+        public void onItemClickListener(View view, int position) {
+            News news = mListFavoriteAdapter.getItem(position);
+            if (view instanceof LinearLayout) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Constants.BUNDLE_NEWS, news);
+                bundle.putInt(Constants.BUNDLE_INDEX, mIndex);
+                ShowDetailFragment fragment = new ShowDetailFragment();
+                fragment.setArguments(bundle);
+                replaceFragment(fragment, TAG_DETAIL_FAVORITE_FRAGMENT);
+            } else if (view instanceof ImageView) {
+                if (!news.isFavorite()) {
+                    UrlCacheUtil.getInstance().cache(news);
+                    int arraySize = mListFavoriteAdapter.getItemCount();
+                    for (int i = 0; i < arraySize; i++) {
+                        WorkerThread worker = new WorkerThread(getActivity(), WorkerThread.WORK_CACHE, mListFavoriteAdapter.getItem(i));
+                        MonitorWorkerThreadUtil.getInstance().assign(worker);
+                    }
+                } else {
+                    UrlCacheUtil.getInstance().remove(news);
+                    mListFavoriteAdapter.removeItem(position);
+                }
+                news.setFavorite(!news.isFavorite());
+                mListFavoriteAdapter.notifyItemChanged(position);
+            }
+        }
+    };
 }

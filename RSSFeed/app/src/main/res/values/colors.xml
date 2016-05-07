@@ -12,4 +12,6 @@
     <color name="raised_button_normal_color">#FFFFFF</color>
     <color name="raised_button_highlight_color">#88f1ecec</color>
     <color name="star_color">#EAF515</color>
+    <color name="transparent">#00000000</color>
+    <color name="hight_light">#b4566aee</color>
 </resources>

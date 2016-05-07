@@ -143,8 +143,8 @@ public class DatabaseHandler {
         String selection = CATEGORY + "=?";
         String[] selectionArgs = {"" + category};
         String[] columns = {TITLE, IMAGE_URL, LINK, DESCRIPTION, CATEGORY};
-        Cursor cursor = mSQLiteDatabase.query(TABLE_FAVORITE, columns,
-                selection, selectionArgs, null, null, null);
+        Cursor cursor = mSQLiteDatabase.query(true, TABLE_FAVORITE, columns, selection,
+                selectionArgs, null, null, null, null);
         cursor.moveToFirst();
         HashMap<String, Integer> columnCache = new HashMap<>();
         columnCache.put(TITLE, cursor.getColumnIndex(TITLE));
@@ -158,6 +158,7 @@ public class DatabaseHandler {
             news.setLink(cursor.getString(columnCache.get(LINK)));
             news.setDescription(cursor.getString(columnCache.get(DESCRIPTION)));
             news.setCategory(category);
+            news.setFavorite(true);
             newsList.add(news);
             cursor.moveToNext();
         }
@@ -201,6 +202,21 @@ public class DatabaseHandler {
         Cursor cursor = mSQLiteDatabase.query(TABLE_NEWS, columns, selection, selectionArgs, null, null, null);
         int tmp = cursor.getCount();
         cursor.close();
+        return tmp > 0;
+    }
+
+    public void deleteHistory() {
+        mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
+        mSQLiteDatabase.delete(TABLE_NEWS, null, null);
+    }
+
+    public boolean isAnyItemInHistory() {
+        mSQLiteDatabase = mDatabaseHelper.getReadableDatabase();
+        String[] columns = {TITLE, IMAGE_URL, LINK, DESCRIPTION};
+        Cursor cursor = mSQLiteDatabase.query(TABLE_NEWS, columns, null, null, null, null, null);
+        int tmp = cursor.getCount();
+        cursor.close();
+        mDatabaseHelper.close();
         return tmp > 0;
     }
 }

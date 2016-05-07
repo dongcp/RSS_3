@@ -15,8 +15,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "(title TEXT, imageUrl TEXT,link TEXT,description TEXT, detail TEXT,category INTEGER)";
     public static final String CREATING_TABLE_FAVORITE = "CREATE TABLE [favorite]" +
             "(title TEXT, imageUrl TEXT,link TEXT,description TEXT,detail TEXT,category INTEGER)";
-    public static final String DROPPING_TABLE_HISTORY = "DROP TABLE IF EXISTS [news_information]";
-    public static final String DROPPING_TABLE_FAVORITE = "DROP TABLE IF EXISTS [favorite]";
+    public static final String DATABASE_ALTER_COLUMN_IN_HISTORY = "ALTER TABLE [news_information] ADD COLUMN" +
+            "category INTEGER ";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
@@ -30,10 +30,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (VERSION == newVersion) {
-            db.execSQL(DROPPING_TABLE_HISTORY);
-            db.execSQL(DROPPING_TABLE_FAVORITE);
-            onCreate(db);
+        if (VERSION < newVersion) {
+            db.execSQL(DATABASE_ALTER_COLUMN_IN_HISTORY);
         }
     }
 }

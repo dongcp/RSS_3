@@ -128,6 +128,11 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsAdapter.ItemHo
         return true;
     }
 
+    public void removeItem(int position) {
+        mNewsList.remove(position);
+        this.notifyDataSetChanged();
+    }
+    
     class ItemHolder extends RecyclerView.ViewHolder {
 
         public TextView newsTitle;
