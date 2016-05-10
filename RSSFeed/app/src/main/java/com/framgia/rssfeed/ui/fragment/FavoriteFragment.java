@@ -13,10 +13,10 @@ import com.framgia.rssfeed.ui.base.BaseFragment;
 
 public class FavoriteFragment extends BaseFragment {
 
+    public static final String TAG_FAVORITE_FRAGMENT = "favorite_fragment";
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     private FavoriteTabFragment mFavoriteTabFragment;
-    public static final String TAG_FAVORITE_FRAGMENT = "favorite_fragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,8 +53,8 @@ public class FavoriteFragment extends BaseFragment {
     }
 
     private void setupAdapter() {
-        String[] titles=getResources().getStringArray(R.array.title_all);
-        mFavoriteTabFragment = new FavoriteTabFragment(getFragmentManager(),titles);
+        String[] titles = getResources().getStringArray(R.array.title_all);
+        mFavoriteTabFragment = new FavoriteTabFragment(getChildFragmentManager(), titles);
         mViewPager.setAdapter(mFavoriteTabFragment);
     }
 }

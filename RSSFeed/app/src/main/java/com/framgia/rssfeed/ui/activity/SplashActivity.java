@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 import com.framgia.rssfeed.R;
+import com.framgia.rssfeed.util.UrlCacheUtil;
 
 public class SplashActivity extends AppCompatActivity {
     private static final int SPLASH_DURATION = 2000;
@@ -14,6 +15,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        UrlCacheUtil.getInstance().init(getApplicationContext());
         waitUntilFinishInitializing();
     }
 

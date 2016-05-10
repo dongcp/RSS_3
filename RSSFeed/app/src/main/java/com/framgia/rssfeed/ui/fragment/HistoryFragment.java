@@ -16,9 +16,8 @@ import com.framgia.rssfeed.data.local.DatabaseHandler;
 import com.framgia.rssfeed.ui.adapter.ListNewsAdapter;
 import com.framgia.rssfeed.ui.base.BaseFragment;
 import com.framgia.rssfeed.ui.base.Constants;
-import com.framgia.rssfeed.util.ListViewItemDecoration;
+import com.framgia.rssfeed.ui.decoration.ListViewItemDecoration;
 import com.framgia.rssfeed.util.OnRecyclerViewItemClickListener;
-
 
 public class HistoryFragment extends Fragment implements OnRecyclerViewItemClickListener {
 
@@ -30,6 +29,7 @@ public class HistoryFragment extends Fragment implements OnRecyclerViewItemClick
         News news = mListHistoryAdapter.getItem(position);
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.BUNDLE_NEWS, news);
+        bundle.putInt(Constants.BUNDLE_TYPE, ShowDetailFragment.TYPE_HISTORY);
         ShowDetailFragment fragment = new ShowDetailFragment();
         fragment.setArguments(bundle);
         replaceFragment(fragment, ListNewsFragment.TAG_LIST_NEWS_FRAGMENT);

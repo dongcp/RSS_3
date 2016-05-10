@@ -12,9 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.framgia.rssfeed.R;
+import com.framgia.rssfeed.ui.fragment.FavoriteFragment;
 import com.framgia.rssfeed.ui.fragment.HomeFragment;
 import com.framgia.rssfeed.ui.fragment.ListNewsFragment;
-import com.framgia.rssfeed.ui.fragment.FavoriteFragment;
 
 /**
  * Created by yue on 21/04/2016.
@@ -52,9 +52,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             item.setChecked(true);
             getDrawerLayout().closeDrawer(GravityCompat.START);
             fragment.setArguments(bundle);
-            if(item.getItemId()==R.id.nav_favorite){
-                replaceFragment(new FavoriteFragment(),FavoriteFragment.TAG_FAVORITE_FRAGMENT);
-            }else{
+            if (item.getItemId() == R.id.nav_favorite) {
+                replaceFragment(new FavoriteFragment(), FavoriteFragment.TAG_FAVORITE_FRAGMENT);
+            } else {
                 replaceFragment(fragment, HomeFragment.TAG_HOME_FRAGMENT);
             }
             return false;

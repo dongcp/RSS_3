@@ -18,4 +18,5 @@ public class Constants {
     public final static int INDEX_NEWS = 5;
     public final static String BUNDLE_NEWS = "news";
     public final static String BUNDLE_INDEX = "index";
+    public final static String BUNDLE_TYPE = "type";
 }

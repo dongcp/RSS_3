@@ -3,10 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <WebView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/web_view"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/common_size_5" />
+    </ScrollView>
 
     <com.framgia.rssfeed.ui.widget.LayoutNotifyState
         android:id="@+id/notify_state_layout"

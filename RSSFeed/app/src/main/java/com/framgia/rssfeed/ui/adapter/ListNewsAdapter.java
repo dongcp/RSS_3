@@ -104,6 +104,17 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsAdapter.ItemHo
         return mNewsList.get(position);
     }
 
+    public ArrayList<News> getNewsList() {
+        return mNewsList;
+    }
+
+    public void removeAllItemsIfExist() {
+        if (mNewsList != null) {
+            mNewsList.clear();
+            notifyDataSetChanged();
+        }
+    }
+
     public void changeLayoutManager(RecyclerView.LayoutManager layoutManager) {
         mLayoutManager = layoutManager;
         notifyDataSetChanged();

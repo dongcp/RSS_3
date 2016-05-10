@@ -16,7 +16,7 @@ import com.framgia.rssfeed.data.bean.Category;
 import com.framgia.rssfeed.ui.adapter.CategoryAdapter;
 import com.framgia.rssfeed.ui.base.BaseFragment;
 import com.framgia.rssfeed.ui.base.Constants;
-import com.framgia.rssfeed.util.GridViewItemDecoration;
+import com.framgia.rssfeed.ui.decoration.GridViewItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;

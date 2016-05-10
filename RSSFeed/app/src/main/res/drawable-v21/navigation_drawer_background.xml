@@ -4,4 +4,8 @@
     <item
         android:drawable="@color/drawer_background_checked_color"
         android:state_checked="true" />
+
+    <item
+        android:drawable="@android:color/transparent"
+        android:state_pressed="false" />
 </ripple>

@@ -13,6 +13,7 @@ public class News implements Serializable {
     private String mImageUrl;
     private String mLink;
     private String mDescription;
+    private int mCategory;
     private boolean mIsFavorite;
 
     public News() {
@@ -52,6 +53,14 @@ public class News implements Serializable {
 
     public String getDescription() {
         return mDescription;
+    }
+
+    public int getCategory() {
+        return mCategory;
+    }
+
+    public void setCategory(int category) {
+        this.mCategory = category;
     }
 
     public void setDescription(String description) {

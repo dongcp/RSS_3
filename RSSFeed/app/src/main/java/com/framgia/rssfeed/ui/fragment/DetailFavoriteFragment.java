@@ -16,7 +16,7 @@ import com.framgia.rssfeed.data.local.DatabaseHandler;
 import com.framgia.rssfeed.ui.adapter.ListNewsAdapter;
 import com.framgia.rssfeed.ui.base.BaseFragment;
 import com.framgia.rssfeed.ui.base.Constants;
-import com.framgia.rssfeed.util.ListViewItemDecoration;
+import com.framgia.rssfeed.ui.decoration.ListViewItemDecoration;
 import com.framgia.rssfeed.util.OnRecyclerViewItemClickListener;
 
 public class DetailFavoriteFragment extends Fragment implements OnRecyclerViewItemClickListener {
@@ -24,12 +24,20 @@ public class DetailFavoriteFragment extends Fragment implements OnRecyclerViewIt
     private ListNewsAdapter mListFavoriteAdapter;
     private int mIndex;
 
+    public static DetailFavoriteFragment newInstance(int category) {
+        DetailFavoriteFragment fragmentDetail = new DetailFavoriteFragment();
+        Bundle args = new Bundle();
+        args.putInt(Constants.BUNDLE_INDEX, category);
+        fragmentDetail.setArguments(args);
+        return fragmentDetail;
+    }
+
     @Override
     public void onItemClickListener(View view, int position) {
         News news = mListFavoriteAdapter.getItem(position);
-        DatabaseHandler.getInstance(getActivity()).insertNewsInfo(news);
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.BUNDLE_NEWS, news);
+        bundle.putInt(Constants.BUNDLE_TYPE, ShowDetailFragment.TYPE_FAVORITE);
         ShowDetailFragment fragment = new ShowDetailFragment();
         fragment.setArguments(bundle);
         replaceFragment(fragment, ListNewsFragment.TAG_LIST_NEWS_FRAGMENT);
@@ -37,14 +45,6 @@ public class DetailFavoriteFragment extends Fragment implements OnRecyclerViewIt
 
     public void findView(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_news);
-    }
-
-    public static DetailFavoriteFragment newInstance(int category) {
-        DetailFavoriteFragment fragmentDetail = new DetailFavoriteFragment();
-        Bundle args = new Bundle();
-        args.putInt(Constants.BUNDLE_INDEX, category);
-        fragmentDetail.setArguments(args);
-        return fragmentDetail;
     }
 
     public void getData() {
