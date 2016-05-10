@@ -52,6 +52,7 @@ public class ListNewsFragment extends BaseFragment {
                 getBaseActivity().replaceFragment(fragment, TAG_LIST_NEWS_FRAGMENT);
             } else if (view instanceof ImageView) {
                 if (!news.isFavorite()) {
+                    UrlCacheUtil.getInstance().cache(news);
                     int arraySize = mAdapter.getItemCount();
                     for (int i = 0; i < arraySize; i++) {
                         WorkerThread worker = new WorkerThread(getActivity(), WorkerThread.WORK_CACHE, mAdapter.getItem(i));

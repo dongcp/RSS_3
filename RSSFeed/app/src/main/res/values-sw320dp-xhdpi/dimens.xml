@@ -21,6 +21,10 @@
     <dimen name="common_text_size_8">18sp</dimen>
     <dimen name="common_text_size_9">19sp</dimen>
     <dimen name="common_text_size_10">20sp</dimen>
+    <dimen name="common_text_size_11">21sp</dimen>
+    <dimen name="common_text_size_12">22sp</dimen>
+    <dimen name="common_text_size_13">23sp</dimen>
+    <dimen name="common_text_size_14">24sp</dimen>
 
     <dimen name="list_news_image_size">85dp</dimen>
     <dimen name="list_news_height">110dp</dimen>

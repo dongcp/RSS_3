@@ -13,4 +13,5 @@
         android:id="@+id/action_switch"
         android:title="@string/action_switch"
         app:showAsAction="always" />
+
 </menu>

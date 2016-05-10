@@ -7,6 +7,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,12 +20,49 @@ import com.framgia.rssfeed.ui.adapter.ListNewsAdapter;
 import com.framgia.rssfeed.ui.base.BaseFragment;
 import com.framgia.rssfeed.ui.base.Constants;
 import com.framgia.rssfeed.ui.decoration.ListViewItemDecoration;
+import com.framgia.rssfeed.ui.widget.DeletingDialog;
+import com.framgia.rssfeed.ui.widget.NothingDialog;
 import com.framgia.rssfeed.util.OnRecyclerViewItemClickListener;
 
 public class HistoryFragment extends Fragment implements OnRecyclerViewItemClickListener {
 
     private RecyclerView mRecyclerView;
     private ListNewsAdapter mListHistoryAdapter;
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.history, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem menuItem = menu.findItem(R.id.action_delete);
+        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (DatabaseHandler.getInstance(getActivity()).isAnyItemInHistory()) {
+                    final DeletingDialog deletingDialog = new DeletingDialog(getActivity());
+                    deletingDialog.setOnDialogItemClickListener(new DeletingDialog.onDeletingDialogItemClickListener() {
+                        @Override
+                        public void deleteItem(int code) {
+                            if (code == DeletingDialog.OK) {
+                                DatabaseHandler.getInstance(getActivity()).deleteHistory();
+                                mListHistoryAdapter.removeAllItemsIfExist();
+                            }
+                            deletingDialog.dismiss();
+                        }
+                    });
+                    deletingDialog.show();
+                } else {
+                    NothingDialog nothingDialog = new NothingDialog(getActivity());
+                    nothingDialog.show();
+                }
+
+                return true;
+            }
+        });
+        super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public void onItemClickListener(View view, int position) {
@@ -53,6 +93,7 @@ public class HistoryFragment extends Fragment implements OnRecyclerViewItemClick
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         findView(view);
         setupRecyclerView(getActivity());
+        setHasOptionsMenu(true);
         return view;
     }
 

@@ -51,7 +51,9 @@ public class NewsFragment extends Fragment implements CategoryAdapter.OnItemClic
         mCategoryAdapter = new CategoryAdapter(getActivity(), mListNews);
         mRecyclerView.setAdapter(mCategoryAdapter);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        mRecyclerView.addItemDecoration(new GridViewItemDecoration(getContext()));
+        GridViewItemDecoration gridViewItemDecoration = new GridViewItemDecoration(
+                getResources().getDimensionPixelSize(R.dimen.common_size_7));
+        mRecyclerView.addItemDecoration(gridViewItemDecoration);
         mCategoryAdapter.setOnItemListener(this);
     }
 
