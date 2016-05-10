@@ -16,8 +16,11 @@ public class News implements Serializable {
     private int mCategory;
     private boolean mIsFavorite;
 
-    public News() {
-        mIsFavorite = false;
+    public News(String link) {
+        mTitle = "";
+        mImageUrl = "";
+        mDescription = "";
+        mLink = link;
     }
 
     public News(String title, String link, String imageUrl, boolean isFavorite) {
@@ -55,17 +58,17 @@ public class News implements Serializable {
         return mDescription;
     }
 
+    public void setDescription(String description) {
+        mDescription = retrieveDescription(description);
+        mImageUrl = retrieveImageUrl(description);
+    }
+
     public int getCategory() {
         return mCategory;
     }
 
     public void setCategory(int category) {
         this.mCategory = category;
-    }
-
-    public void setDescription(String description) {
-        mDescription = retrieveDescription(description);
-        mImageUrl = retrieveImageUrl(description);
     }
 
     public boolean isFavorite() {

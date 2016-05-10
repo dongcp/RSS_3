@@ -1,7 +1,6 @@
 package com.framgia.rssfeed.util;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Environment;
 
 import com.framgia.rssfeed.data.bean.News;
@@ -21,10 +20,8 @@ public class UrlCacheUtil {
 
     private static UrlCacheUtil sInstance;
     private Context mContext;
-    private boolean mIsCachable;
 
     private UrlCacheUtil() {
-        mIsCachable = true;
     }
 
     public static UrlCacheUtil getInstance() {
@@ -42,59 +39,25 @@ public class UrlCacheUtil {
 
     public String cacheImageIfNeed(String imageUrl) throws IOException {
         File imageFile = getImageFile(imageUrl);
-        if (!imageFile.exists()) {
-            downloadFile(imageUrl, imageFile);
+        if (NetworkUtil.isNetworkAvailable(mContext)) {
+            if (!imageFile.exists()) {
+                downloadFile(imageUrl, imageFile);
+            }
+            HttpRequest.getInstance().disconnect(HttpRequest.getInstance().getConnection());
         }
-        HttpRequest.getInstance().disconnect(HttpRequest.getInstance().getConnection());
         return imageFile.getAbsolutePath();
     }
 
-    public void cache(News news) {
-        AsyncTask<Object, Void, Void> asyncTask = new AsyncTask<Object, Void, Void>() {
-            @Override
-            protected Void doInBackground(Object... params) {
-                if (!mIsCachable) cancel(true);
-                try {
-                    ArrayList<Object> objects = XmlParser.getDocumentDescription(((News) params[0]).getLink());
-                    if (objects != null) {
-                        cacheImageIfNeed(((News) params[0]).getLink());
-                        DatabaseHandler.getInstance(mContext).insertFavoriteInfo(((News) params[0]), (String) objects.get(0));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        };
-        asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, news);
-    }
-
-    public void cache(ArrayList<News> newsList) {
-        int size = newsList.size();
-        for (int i = 0; i < size; i++) {
-            if (!mIsCachable) break;
-            cache(newsList.get(i));
+    public void cache(News news) throws IOException {
+        ArrayList<Object> objects = XmlParser.getDocumentDescription(news.getLink());
+        if (objects != null) {
+            cacheImageIfNeed(news.getLink());
+            DatabaseHandler.getInstance(mContext).insertFavoriteInfo(news, (String) objects.get(0));
         }
     }
 
     public void remove(News news) {
-        AsyncTask<News, Void, Void> asyncTask = new AsyncTask<News, Void, Void>() {
-            @Override
-            protected Void doInBackground(News... params) {
-                DatabaseHandler.getInstance(mContext).removeFavorite(params[0].getLink());
-                return null;
-            }
-        };
-        asyncTask.execute(news);
-    }
-
-    public void remove(ArrayList<News> newsList) {
-        mIsCachable = false;
-        int arraySize = newsList.size();
-        for (int i = 0; i < arraySize; i++) {
-            remove(newsList.get(i));
-        }
-        mIsCachable = true;
+        DatabaseHandler.getInstance(mContext).removeFavorite(news.getLink());
     }
 
     public File getImageFile(String imageUrl) {

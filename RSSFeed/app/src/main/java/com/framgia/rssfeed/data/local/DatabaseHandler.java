@@ -95,7 +95,7 @@ public class DatabaseHandler {
         mSQLiteDatabase.delete(TABLE_FAVORITE, where, whereArgs);
     }
 
-    public ArrayList<News> getHistoryNews() {
+    public ArrayList<News> getHistoryNewsList() {
         mSQLiteDatabase = mDatabaseHelper.getReadableDatabase();
         ArrayList<News> newsList = new ArrayList<>();
         String[] columns = {TITLE, IMAGE_URL, LINK, DESCRIPTION, CATEGORY};
@@ -120,6 +120,36 @@ public class DatabaseHandler {
         }
         cursor.close();
         return newsList;
+    }
+
+    public String getHistoryDocByUrl(String url) {
+        mSQLiteDatabase = mDatabaseHelper.getReadableDatabase();
+        String[] columns = {DETAIL};
+        String selection = LINK + "=?";
+        String[] selectionArgs = {url};
+        Cursor cursor = mSQLiteDatabase.query(true, TABLE_NEWS, columns,
+                selection, selectionArgs, null, null, null, null);
+        if (cursor.getCount() == 0) return null;
+        cursor.moveToFirst();
+        int detailColumnIndex = cursor.getColumnIndex(DETAIL);
+        String detail = cursor.getString(detailColumnIndex);
+        cursor.close();
+        return detail;
+    }
+
+    public String getFavoriteDocByUrl(String url) {
+        mSQLiteDatabase = mDatabaseHelper.getReadableDatabase();
+        String[] columns = {DETAIL};
+        String selection = LINK + "=?";
+        String[] selectionArgs = {url};
+        Cursor cursor = mSQLiteDatabase.query(true, TABLE_FAVORITE, columns,
+                selection, selectionArgs, null, null, null, null);
+        if (cursor.getCount() == 0) return null;
+        cursor.moveToFirst();
+        int detailColumnIndex = cursor.getColumnIndex(DETAIL);
+        String detail = cursor.getString(detailColumnIndex);
+        cursor.close();
+        return detail;
     }
 
     public String getHistoryUrlDetail(String url) {

@@ -19,7 +19,7 @@ import com.framgia.rssfeed.ui.base.BaseFragment;
 import com.framgia.rssfeed.ui.base.Constants;
 import com.framgia.rssfeed.ui.widget.LayoutNotifyState;
 import com.framgia.rssfeed.util.MonitorWorkerThreadUtil;
-import com.framgia.rssfeed.util.UrlCacheUtil;
+import com.framgia.rssfeed.util.NetworkUtil;
 import com.framgia.rssfeed.util.WorkerThread;
 
 import java.util.ArrayList;
@@ -29,11 +29,14 @@ import java.util.ArrayList;
  */
 public class ShowDetailFragment extends BaseFragment {
 
+    public final static int TYPE_NORMAL = 0;
     public final static int TYPE_HISTORY = 1;
     public final static int TYPE_FAVORITE = 2;
     private TextView mTextContent;
+    private TextView mTextTitle;
     private LayoutNotifyState mNotifyStateLayout;
     private News mNews;
+    private int mType;
     private WorkerThread.OnWorkListener mOnWorkListener = new WorkerThread.OnWorkListener() {
         @Override
         public void onWorkDone(final ArrayList<Object> objects) {
@@ -41,15 +44,18 @@ public class ShowDetailFragment extends BaseFragment {
                 @Override
                 public void run() {
                     if (objects != null) {
-                        mNotifyStateLayout.hide(mTextContent);
                         final String doc = (String) objects.get(0);
-                        mTextContent.setText(Html.fromHtml(doc, new ImageGetter(getActivity()), null));
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                DatabaseHandler.getInstance(getActivity()).insertNewsInfo(mNews, doc);
-                            }
-                        }).start();
+                        if (doc == null) {
+                            mNotifyStateLayout.show(mNotifyStateLayout.TYPE_NO_DATA_LAYOUT, mTextContent);
+                        } else {
+                            showHtml(doc);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    DatabaseHandler.getInstance(getActivity()).insertNewsInfo(mNews, doc);
+                                }
+                            }).start();
+                        }
                     } else {
                         mNotifyStateLayout.show(LayoutNotifyState.TYPE_NO_DATA_LAYOUT, mTextContent);
                     }
@@ -72,10 +78,27 @@ public class ShowDetailFragment extends BaseFragment {
     @Override
     protected void onCreateContentView(View rootView) {
         findViews(rootView);
-        WorkerThread workerThread = new WorkerThread(getActivity(), WorkerThread.WORK_LOAD_DOC, mNews);
-        workerThread.setOnWorkListener(mOnWorkListener);
-        MonitorWorkerThreadUtil.getInstance().assign(workerThread);
-        mNotifyStateLayout.show(LayoutNotifyState.TYPE_LOADING_LAYOUT, mTextContent);
+        switch (mType) {
+            case TYPE_NORMAL:
+                if (NetworkUtil.isNetworkAvailable(getActivity())) {
+                    mNotifyStateLayout.show(LayoutNotifyState.TYPE_LOADING_LAYOUT, mTextContent);
+                    WorkerThread workerThread = new WorkerThread(getActivity(), WorkerThread.Work.LOAD_DOC
+                            , mNews, WorkerThread.WorkPriority.NORMAL);
+                    workerThread.setOnWorkListener(mOnWorkListener);
+                    MonitorWorkerThreadUtil.getInstance().assign(workerThread);
+                } else {
+                    mNotifyStateLayout.show(mNotifyStateLayout.TYPE_NETWORK_ERROR_LAYOUT, mTextContent);
+                }
+                break;
+            case TYPE_HISTORY:
+                String doc = DatabaseHandler.getInstance(getActivity()).getHistoryDocByUrl(mNews.getLink());
+                showHtml(doc);
+                break;
+            case TYPE_FAVORITE:
+                doc = DatabaseHandler.getInstance(getActivity()).getFavoriteDocByUrl(mNews.getLink());
+                showHtml(doc);
+                break;
+        }
     }
 
     @Override
@@ -95,21 +118,34 @@ public class ShowDetailFragment extends BaseFragment {
 
     @Override
     protected void onMenuItemClick(MenuItem item) {
+        ArrayList<News> newsList = new ArrayList<>();
+        newsList.add(mNews);
+        WorkerThread.Work work;
         if (item.isChecked()) {
-            UrlCacheUtil.getInstance().cache(mNews);
+            work = WorkerThread.Work.CACHE;
         } else {
-            UrlCacheUtil.getInstance().remove(mNews);
+            work = WorkerThread.Work.REMOVE;
         }
+        WorkerThread worker = new WorkerThread(getActivity(), work, mNews, WorkerThread.WorkPriority.NORMAL);
+        MonitorWorkerThreadUtil.getInstance().assign(worker);
+    }
+
+    private void showHtml(String doc) {
+        mNotifyStateLayout.hide(mTextContent);
+        mTextContent.setText(Html.fromHtml(doc, new ImageGetter(getActivity()), null));
+        mTextTitle.setText(mNews.getTitle());
     }
 
     private void getData() {
         Bundle bundle = getArguments();
         mNews = (News) bundle.getSerializable(Constants.BUNDLE_NEWS);
+        mType = bundle.getInt(Constants.BUNDLE_TYPE, TYPE_NORMAL);
     }
 
     private void findViews(View rootView) {
         mNotifyStateLayout = (LayoutNotifyState) rootView.findViewById(R.id.notify_state_layout);
         mTextContent = (TextView) rootView.findViewById(R.id.text_content);
+        mTextTitle = (TextView) rootView.findViewById(R.id.text_title);
     }
 
     private static class ImageGetter implements Html.ImageGetter {

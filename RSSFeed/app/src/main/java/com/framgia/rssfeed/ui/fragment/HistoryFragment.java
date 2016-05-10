@@ -84,7 +84,7 @@ public class HistoryFragment extends Fragment implements OnRecyclerViewItemClick
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.addItemDecoration(mListViewItemDecoration);
         mListHistoryAdapter = new ListNewsAdapter(context, mRecyclerView.getLayoutManager());
-        mListHistoryAdapter.addItems(DatabaseHandler.getInstance(context).getHistoryNews());
+        mListHistoryAdapter.addItems(DatabaseHandler.getInstance(context).getHistoryNewsList());
         mListHistoryAdapter.setOnRecyclerViewItemClickListener(this);
         mRecyclerView.setAdapter(mListHistoryAdapter);
     }

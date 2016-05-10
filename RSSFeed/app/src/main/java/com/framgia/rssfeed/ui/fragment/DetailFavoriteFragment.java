@@ -21,14 +21,32 @@ import com.framgia.rssfeed.ui.base.Constants;
 import com.framgia.rssfeed.ui.decoration.ListViewItemDecoration;
 import com.framgia.rssfeed.util.MonitorWorkerThreadUtil;
 import com.framgia.rssfeed.util.OnRecyclerViewItemClickListener;
-import com.framgia.rssfeed.util.UrlCacheUtil;
 import com.framgia.rssfeed.util.WorkerThread;
 
 public class DetailFavoriteFragment extends Fragment {
+    public static final String TAG_DETAIL_FAVORITE_FRAGMENT = "detail_favorite_fragment";
     private RecyclerView mRecyclerView;
     private ListNewsAdapter mListFavoriteAdapter;
     private int mIndex;
-    public static final String TAG_DETAIL_FAVORITE_FRAGMENT = "detail_favorite_fragment";
+    private OnRecyclerViewItemClickListener mOnRecyclerViewItemClickListener = new OnRecyclerViewItemClickListener() {
+        @Override
+        public void onItemClickListener(View view, int position) {
+            News news = mListFavoriteAdapter.getItem(position);
+            if (view instanceof LinearLayout) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Constants.BUNDLE_NEWS, news);
+                bundle.putInt(Constants.BUNDLE_INDEX, mIndex);
+                ShowDetailFragment fragment = new ShowDetailFragment();
+                fragment.setArguments(bundle);
+                replaceFragment(fragment, TAG_DETAIL_FAVORITE_FRAGMENT);
+            } else if (view instanceof ImageView) {
+                WorkerThread worker = new WorkerThread(getActivity(), WorkerThread.Work.REMOVE
+                        , mListFavoriteAdapter.getItem(position), WorkerThread.WorkPriority.NORMAL);
+                MonitorWorkerThreadUtil.getInstance().assign(worker);
+                mListFavoriteAdapter.removeItem(position);
+            }
+        }
+    };
 
     public static DetailFavoriteFragment newInstance(int category) {
         DetailFavoriteFragment fragmentDetail = new DetailFavoriteFragment();
@@ -73,33 +91,4 @@ public class DetailFavoriteFragment extends Fragment {
                 .addToBackStack("")
                 .commit();
     }
-
-    private OnRecyclerViewItemClickListener mOnRecyclerViewItemClickListener = new OnRecyclerViewItemClickListener() {
-        @Override
-        public void onItemClickListener(View view, int position) {
-            News news = mListFavoriteAdapter.getItem(position);
-            if (view instanceof LinearLayout) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(Constants.BUNDLE_NEWS, news);
-                bundle.putInt(Constants.BUNDLE_INDEX, mIndex);
-                ShowDetailFragment fragment = new ShowDetailFragment();
-                fragment.setArguments(bundle);
-                replaceFragment(fragment, TAG_DETAIL_FAVORITE_FRAGMENT);
-            } else if (view instanceof ImageView) {
-                if (!news.isFavorite()) {
-                    UrlCacheUtil.getInstance().cache(news);
-                    int arraySize = mListFavoriteAdapter.getItemCount();
-                    for (int i = 0; i < arraySize; i++) {
-                        WorkerThread worker = new WorkerThread(getActivity(), WorkerThread.WORK_CACHE, mListFavoriteAdapter.getItem(i));
-                        MonitorWorkerThreadUtil.getInstance().assign(worker);
-                    }
-                } else {
-                    UrlCacheUtil.getInstance().remove(news);
-                    mListFavoriteAdapter.removeItem(position);
-                }
-                news.setFavorite(!news.isFavorite());
-                mListFavoriteAdapter.notifyItemChanged(position);
-            }
-        }
-    };
 }

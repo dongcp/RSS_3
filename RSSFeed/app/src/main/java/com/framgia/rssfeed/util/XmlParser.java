@@ -1,7 +1,6 @@
 package com.framgia.rssfeed.util;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.framgia.rssfeed.data.bean.News;
 import com.framgia.rssfeed.data.local.DatabaseHandler;

@@ -29,6 +29,6 @@
     <dimen name="list_news_image_size">85dp</dimen>
     <dimen name="list_news_height">110dp</dimen>
     <dimen name="grid_news_image_size">100dp</dimen>
-    <dimen name="grid_news_height">220dp</dimen>
+    <dimen name="grid_news_height">250dp</dimen>
     <dimen name="recycler_view_item_default_space">5dp</dimen>
 </resources>

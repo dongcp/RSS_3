@@ -1,8 +1,11 @@
 package com.framgia.rssfeed.ui.fragment;
 
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.framgia.rssfeed.R;
 import com.framgia.rssfeed.ui.adapter.TabFragmentAdapter;
@@ -39,6 +42,11 @@ public class HomeFragment extends BaseFragment {
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         setupViewPager();
         mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tab_layout_background_color));
+        mTabLayout.setTabTextColors(ContextCompat.getColor(getActivity(), R.color.white)
+                , ContextCompat.getColor(getActivity(), R.color.white));
+        mTabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+        mTabLayout.setSelectedTabIndicatorHeight(getResources().getDimensionPixelSize(R.dimen.common_size_3));
     }
 
     private void setupViewPager() {
