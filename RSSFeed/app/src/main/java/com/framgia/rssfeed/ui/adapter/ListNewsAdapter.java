@@ -132,7 +132,7 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsAdapter.ItemHo
         mNewsList.remove(position);
         this.notifyDataSetChanged();
     }
-    
+
     class ItemHolder extends RecyclerView.ViewHolder {
 
         public TextView newsTitle;

@@ -14,9 +14,9 @@ import java.net.URL;
  */
 public class HttpRequest {
 
-    public final static String REQUEST_METHOD = "GET";
-    public final static int READ_TIMEOUT = 10000;
-    public final static int CONNECT_TIMEOUT = 30000;
+    private final String REQUEST_METHOD = "GET";
+    private final int READ_TIMEOUT = 10000;
+    private final int CONNECT_TIMEOUT = 30000;
     private static HttpRequest sInstance;
     private HttpURLConnection mConnection;
     private InputStream mStream;

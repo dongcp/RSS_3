@@ -20,7 +20,6 @@ import com.framgia.rssfeed.ui.widget.LayoutNotifyState;
 import com.framgia.rssfeed.util.MonitorWorkerThreadUtil;
 import com.framgia.rssfeed.util.NetworkUtil;
 import com.framgia.rssfeed.util.OnRecyclerViewItemClickListener;
-import com.framgia.rssfeed.util.UrlCacheUtil;
 import com.framgia.rssfeed.util.WorkerThread;
 
 import java.util.ArrayList;
@@ -46,21 +45,19 @@ public class ListNewsFragment extends BaseFragment {
             if (view instanceof LinearLayout) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Constants.BUNDLE_NEWS, news);
-                bundle.putInt(Constants.BUNDLE_INDEX, mIndex);
+                bundle.putInt(Constants.BUNDLE_TYPE, ShowDetailFragment.TYPE_NORMAL);
                 ShowDetailFragment fragment = new ShowDetailFragment();
                 fragment.setArguments(bundle);
                 getBaseActivity().replaceFragment(fragment, TAG_LIST_NEWS_FRAGMENT);
             } else if (view instanceof ImageView) {
+                WorkerThread.Work work;
                 if (!news.isFavorite()) {
-                    UrlCacheUtil.getInstance().cache(news);
-                    int arraySize = mAdapter.getItemCount();
-                    for (int i = 0; i < arraySize; i++) {
-                        WorkerThread worker = new WorkerThread(getActivity(), WorkerThread.WORK_CACHE, mAdapter.getItem(i));
-                        MonitorWorkerThreadUtil.getInstance().assign(worker);
-                    }
+                    work = WorkerThread.Work.CACHE;
                 } else {
-                    UrlCacheUtil.getInstance().remove(news);
+                    work = WorkerThread.Work.REMOVE;
                 }
+                WorkerThread worker = new WorkerThread(getActivity(), work, news, WorkerThread.WorkPriority.NORMAL);
+                MonitorWorkerThreadUtil.getInstance().assign(worker);
                 news.setFavorite(!news.isFavorite());
                 mAdapter.notifyItemChanged(position);
             }
@@ -132,16 +129,12 @@ public class ListNewsFragment extends BaseFragment {
                 getBaseActivity().getNavigationView().setCheckedItem(R.id.nav_news);
                 break;
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         if (NetworkUtil.isNetworkAvailable(getActivity())) {
             if (mNotifyStateLayout.getVisibility() == View.VISIBLE) {
                 mNotifyStateLayout.hide(mListNews);
             }
-            WorkerThread workerThread = new WorkerThread(getActivity(), WorkerThread.WORK_LOAD_NEWS_LIST, mUrl);
+            WorkerThread workerThread = new WorkerThread(getActivity(), WorkerThread.Work.LOAD_NEWS_LIST
+                    , mUrl, WorkerThread.WorkPriority.MAX);
             workerThread.setOnWorkListener(mOnWorkListener);
             MonitorWorkerThreadUtil.getInstance().assign(workerThread);
             mNotifyStateLayout.show(LayoutNotifyState.TYPE_LOADING_LAYOUT, mListNews);
@@ -150,11 +143,6 @@ public class ListNewsFragment extends BaseFragment {
                 mNotifyStateLayout.show(LayoutNotifyState.TYPE_NETWORK_ERROR_LAYOUT, mListNews);
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -191,12 +179,21 @@ public class ListNewsFragment extends BaseFragment {
     protected void onMenuItemClick(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favorite:
-                if (item.isChecked()) {
-                    UrlCacheUtil.getInstance().cache(mAdapter.getNewsList());
-                } else {
-                    UrlCacheUtil.getInstance().remove(mAdapter.getNewsList());
-                }
                 int arraySize = mAdapter.getItemCount();
+                if (item.isChecked()) {
+                    for (int i = 0; i < arraySize; i++) {
+                        WorkerThread worker = new WorkerThread(getActivity(), WorkerThread.Work.CACHE
+                                , mAdapter.getItem(i), WorkerThread.WorkPriority.MIN);
+                        MonitorWorkerThreadUtil.getInstance().assign(worker);
+                    }
+                } else {
+                    MonitorWorkerThreadUtil.getInstance().clear();
+                    for (int i = 0; i < arraySize; i++) {
+                        WorkerThread worker = new WorkerThread(getActivity(), WorkerThread.Work.REMOVE
+                                , mAdapter.getItem(i), WorkerThread.WorkPriority.MIN);
+                        MonitorWorkerThreadUtil.getInstance().assign(worker);
+                    }
+                }
                 for (int i = 0; i < arraySize; i++) {
                     mAdapter.getItem(i).setFavorite(item.isChecked());
                 }

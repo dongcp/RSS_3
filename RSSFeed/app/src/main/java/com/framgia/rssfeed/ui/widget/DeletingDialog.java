@@ -13,10 +13,10 @@ import com.framgia.rssfeed.R;
  * Created by VULAN on 5/9/2016.
  */
 public class DeletingDialog extends Dialog implements View.OnClickListener {
-    private TextView mTextViewOK;
-    private TextView mTextViewCanCel;
     public static final int OK = 1;
     public static final int CANCEL = 0;
+    private TextView mTextViewOK;
+    private TextView mTextViewCanCel;
     private onDeletingDialogItemClickListener mOnDeletingDialogItemClickListener;
 
     public DeletingDialog(Context context) {

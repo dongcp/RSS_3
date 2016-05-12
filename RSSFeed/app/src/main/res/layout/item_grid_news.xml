@@ -20,7 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:clickable="true"
-            android:padding="@dimen/common_size_10"
             android:src="@drawable/ic_normal_star" />
 
         <TextView
@@ -54,7 +53,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="top"
-            android:padding="@dimen/common_size_10"
+            android:maxLines="4"
+            android:padding="@dimen/common_size_5"
             android:textSize="@dimen/common_text_size_6" />
     </LinearLayout>
 </android.support.v7.widget.CardView>

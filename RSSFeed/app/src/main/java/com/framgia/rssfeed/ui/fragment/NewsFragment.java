@@ -52,7 +52,7 @@ public class NewsFragment extends Fragment implements CategoryAdapter.OnItemClic
         mRecyclerView.setAdapter(mCategoryAdapter);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         GridViewItemDecoration gridViewItemDecoration = new GridViewItemDecoration(
-                getResources().getDimensionPixelSize(R.dimen.common_size_7));
+                getResources().getDimensionPixelSize(R.dimen.common_size_5));
         mRecyclerView.addItemDecoration(gridViewItemDecoration);
         mCategoryAdapter.setOnItemListener(this);
     }

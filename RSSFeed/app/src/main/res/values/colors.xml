@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#CC0000</color>
+    <color name="colorPrimaryDark">#990000</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="background_color">#F1EAEA</color>
+    <color name="background_color">#e4dfdf</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="drawer_background_checked_color">#9b7b7b</color>
@@ -14,4 +14,5 @@
     <color name="star_color">#EAF515</color>
     <color name="transparent">#00000000</color>
     <color name="hight_light">#b4566aee</color>
+    <color name="tab_layout_background_color">#363434</color>
 </resources>
