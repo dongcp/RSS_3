@@ -1,7 +1,7 @@
 package com.framgia.rssfeed.ui.base;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -62,9 +62,9 @@ public abstract class BaseFragment extends Fragment {
             item.setVisible(false);
         }
         if (enableFavoriteList()) {
-            item_favorite_list.setVisible(true);
+            itemFavoriteList.setVisible(true);
         } else {
-            item_favorite_list.setVisible(false);
+            itemFavoriteList.setVisible(false);
         }
     }
 

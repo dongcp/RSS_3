@@ -1,8 +1,7 @@
 package com.framgia.rssfeed.ui.adapter;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.app.Fragment;
+import android.app.FragmentManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 /**
  * Created by VULAN on 4/23/2016.
  */
-public class TabFragmentAdapter extends FragmentPagerAdapter {
+public class TabFragmentAdapter extends android.support.v13.app.FragmentPagerAdapter {
 
     private List<Fragment> mFragmentList = new ArrayList<>();
     private List<String> mTitleFragmentList = new ArrayList<>();

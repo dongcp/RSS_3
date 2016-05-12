@@ -1,9 +1,9 @@
 package com.framgia.rssfeed.ui.fragment;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,7 +35,7 @@ public class DetailFavoriteFragment extends Fragment {
             if (view instanceof LinearLayout) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Constants.BUNDLE_NEWS, news);
-                bundle.putInt(Constants.BUNDLE_INDEX, mIndex);
+                bundle.putInt(Constants.BUNDLE_TYPE, ShowDetailFragment.TYPE_FAVORITE);
                 ShowDetailFragment fragment = new ShowDetailFragment();
                 fragment.setArguments(bundle);
                 replaceFragment(fragment, TAG_DETAIL_FAVORITE_FRAGMENT);
@@ -63,7 +63,7 @@ public class DetailFavoriteFragment extends Fragment {
     public void getData() {
         Bundle bundle = this.getArguments();
         mIndex = bundle.getInt(Constants.BUNDLE_INDEX);
-        mListFavoriteAdapter.addItems(DatabaseHandler.getInstance(getContext()).getFavoriteNews(mIndex));
+        mListFavoriteAdapter.addItems(DatabaseHandler.getInstance(getActivity()).getFavoriteNews(mIndex));
     }
 
     public void setupRecyclerView(Context context) {
@@ -84,11 +84,10 @@ public class DetailFavoriteFragment extends Fragment {
     }
 
     private void replaceFragment(BaseFragment fragment, String tag) {
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.fragment_slide_right_enter, R.anim.fragment_slide_left_exit,
-                R.anim.fragment_slide_left_enter, R.anim.fragment_slide_right_exit)
+        FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.animator.fragment_slide_right_enter, R.animator.fragment_slide_left_exit,
+                R.animator.fragment_slide_left_enter, R.animator.fragment_slide_right_exit)
                 .replace(R.id.fragmentContainer, fragment, tag)
-                .addToBackStack("")
-                .commit();
+                .addToBackStack("").commit();
     }
 }

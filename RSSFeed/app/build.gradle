@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.framgia.rssfeed"
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -29,4 +29,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.3.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'org.jsoup:jsoup:1.9.1'
+    compile 'com.android.support:support-v13:23.3.0'
 }

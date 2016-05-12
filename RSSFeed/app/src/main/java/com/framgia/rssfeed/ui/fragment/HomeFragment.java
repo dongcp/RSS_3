@@ -43,6 +43,7 @@ public class HomeFragment extends BaseFragment {
         mTabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         setupViewPager();
+        mTabLayout.setTabsFromPagerAdapter(mTabFragmentAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tab_layout_background_color));
         mTabLayout.setTabTextColors(ContextCompat.getColor(getActivity(), R.color.white)

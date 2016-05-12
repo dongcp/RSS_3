@@ -56,8 +56,7 @@ public class WorkerThread implements Runnable, Comparable<WorkerThread> {
     public void doWork(Work work) throws IOException, XmlPullParserException {
         switch (work) {
             case LOAD_DOC:
-                ArrayList<Object> docs = new ArrayList<>();
-                docs.addAll(XmlParser.getDocumentDescription(mNews.getLink()));
+                ArrayList<Object> docs = XmlParser.getDocumentDescription(mNews.getLink());
                 if (mOnWorkListener != null) {
                     mOnWorkListener.onWorkDone(docs);
                 }

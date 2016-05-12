@@ -1,7 +1,10 @@
 package com.framgia.rssfeed.ui.fragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -153,7 +156,10 @@ public class ShowDetailFragment extends BaseFragment {
 
         @Override
         public Drawable getDrawable(String source) {
-            Drawable drawable = Drawable.createFromPath(source);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 2;
+            Bitmap bitmap = BitmapFactory.decodeFile(source, options);
+            Drawable drawable = new BitmapDrawable(mContext.getResources(), bitmap);
             if (drawable == null) {
                 drawable = ContextCompat.getDrawable(mContext, R.drawable.image_not_available);
             }

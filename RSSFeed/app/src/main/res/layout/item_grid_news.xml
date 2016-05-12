@@ -51,9 +51,7 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
             android:gravity="top"
-            android:maxLines="4"
             android:padding="@dimen/common_size_5"
             android:textSize="@dimen/common_text_size_6" />
     </LinearLayout>

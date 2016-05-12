@@ -1,9 +1,9 @@
 package com.framgia.rssfeed.ui.fragment;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -98,11 +98,10 @@ public class HistoryFragment extends Fragment implements OnRecyclerViewItemClick
     }
 
     private void replaceFragment(BaseFragment fragment, String tag) {
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.fragment_slide_right_enter, R.anim.fragment_slide_left_exit,
-                R.anim.fragment_slide_left_enter, R.anim.fragment_slide_right_exit)
+        FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.animator.fragment_slide_right_enter, R.animator.fragment_slide_left_exit,
+                R.animator.fragment_slide_left_enter, R.animator.fragment_slide_right_exit)
                 .replace(R.id.fragmentContainer, fragment, tag)
-                .addToBackStack("")
-                .commit();
+                .addToBackStack("").commit();
     }
 }
