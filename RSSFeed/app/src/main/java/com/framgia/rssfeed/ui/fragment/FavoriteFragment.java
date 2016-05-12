@@ -3,6 +3,7 @@ package com.framgia.rssfeed.ui.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
@@ -50,6 +51,11 @@ public class FavoriteFragment extends BaseFragment {
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         setupAdapter();
         mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.tab_layout_background_color));
+        mTabLayout.setTabTextColors(ContextCompat.getColor(getActivity(), R.color.white)
+                , ContextCompat.getColor(getActivity(), R.color.white));
+        mTabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+        mTabLayout.setSelectedTabIndicatorHeight(getResources().getDimensionPixelSize(R.dimen.common_size_3));
     }
 
     private void setupAdapter() {

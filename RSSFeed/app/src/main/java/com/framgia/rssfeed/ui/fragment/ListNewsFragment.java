@@ -109,26 +109,6 @@ public class ListNewsFragment extends BaseFragment {
         mAdapter.setOnRecyclerViewItemClickListener(mOnItemClickListener);
         mListNews.setAdapter(mAdapter);
         mAdapter.changeLayoutManager(mListNews.getLayoutManager());
-        switch (mIndex) {
-            case Constants.INDEX_BUSINESS:
-                getBaseActivity().getNavigationView().setCheckedItem(R.id.nav_business);
-                break;
-            case Constants.INDEX_EDUCATION:
-                getBaseActivity().getNavigationView().setCheckedItem(R.id.nav_education);
-                break;
-            case Constants.INDEX_ENTERTAINMENT:
-                getBaseActivity().getNavigationView().setCheckedItem(R.id.nav_entertainment);
-                break;
-            case Constants.INDEX_TECHNOLOGY:
-                getBaseActivity().getNavigationView().setCheckedItem(R.id.nav_technology);
-                break;
-            case Constants.INDEX_LAWS:
-                getBaseActivity().getNavigationView().setCheckedItem(R.id.nav_law);
-                break;
-            case Constants.INDEX_NEWS:
-                getBaseActivity().getNavigationView().setCheckedItem(R.id.nav_news);
-                break;
-        }
         if (NetworkUtil.isNetworkAvailable(getActivity())) {
             if (mNotifyStateLayout.getVisibility() == View.VISIBLE) {
                 mNotifyStateLayout.hide(mListNews);

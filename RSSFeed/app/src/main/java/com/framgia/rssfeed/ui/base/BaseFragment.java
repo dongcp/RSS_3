@@ -3,8 +3,6 @@ package com.framgia.rssfeed.ui.base;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.framgia.rssfeed.R;
+import com.framgia.rssfeed.ui.fragment.FavoriteFragment;
 
 /**
  * Created by yue on 21/04/2016.
@@ -36,24 +35,11 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getBaseActivity().getSupportActionBar().setTitle(getTitle());
-
         if (enableBackButton()) {
             getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getBaseActivity().getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
-            if (enableNavigationDrawer()) {
-                getBaseActivity().getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-            } else {
-                getBaseActivity().getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            }
         } else {
-            if (enableNavigationDrawer()) {
-                getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getBaseActivity().getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
-                getBaseActivity().getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            } else {
-                getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                getBaseActivity().getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            }
+            getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
     }
 
@@ -62,6 +48,7 @@ public abstract class BaseFragment extends Fragment {
         inflater.inflate(R.menu.main, menu);
         menu.findItem(R.id.action_switch).setVisible(enableSwitchButton());
         MenuItem item = menu.findItem(R.id.action_favorite);
+        MenuItem itemFavoriteList = menu.findItem(R.id.action_open_favorite_list);
         if (enableFavoriteButton()) {
             item.setVisible(true);
             if (isFavorite()) {
@@ -74,6 +61,11 @@ public abstract class BaseFragment extends Fragment {
         } else {
             item.setVisible(false);
         }
+        if (enableFavoriteList()) {
+            item_favorite_list.setVisible(true);
+        } else {
+            item_favorite_list.setVisible(false);
+        }
     }
 
     @Override
@@ -82,10 +74,12 @@ public abstract class BaseFragment extends Fragment {
             case android.R.id.home:
                 if (enableBackButton()) {
                     onBackPressed();
-                } else {
-                    if (enableNavigationDrawer()) {
-                        getBaseActivity().getDrawerLayout().openDrawer(GravityCompat.START);
-                    }
+                }
+                break;
+            case R.id.action_open_favorite_list:
+                if (enableFavoriteList()) {
+                    getBaseActivity().replaceFragment(new FavoriteFragment()
+                            , FavoriteFragment.TAG_FAVORITE_FRAGMENT);
                 }
                 break;
             case R.id.action_favorite:
@@ -108,11 +102,7 @@ public abstract class BaseFragment extends Fragment {
     protected abstract void onCreateContentView(View rootView);
 
     protected void onBackPressed() {
-        if (getBaseActivity().getDrawerLayout().isDrawerOpen(GravityCompat.START)) {
-            getBaseActivity().getDrawerLayout().closeDrawer(GravityCompat.START);
-        } else {
-            getBaseActivity().popFragment();
-        }
+        getBaseActivity().popFragment();
     }
 
     protected BaseActivity getBaseActivity() {
@@ -130,8 +120,8 @@ public abstract class BaseFragment extends Fragment {
         return true;
     }
 
-    protected boolean enableNavigationDrawer() {
-        return true;
+    protected boolean enableFavoriteList() {
+        return false;
     }
 
     protected boolean enableFavoriteButton() {

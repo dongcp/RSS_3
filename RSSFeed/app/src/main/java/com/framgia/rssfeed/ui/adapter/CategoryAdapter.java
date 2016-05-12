@@ -1,12 +1,12 @@
 package com.framgia.rssfeed.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.framgia.rssfeed.R;
@@ -41,9 +41,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Category category = mListNews.get(position);
-        holder.setTitle(category.getText());
-        holder.setImageCategory(category.getImage());
-        holder.getImageCategory().setOnClickListener(new View.OnClickListener() {
+        holder.mTitle.setText(category.getText());
+        holder.mImageCategory.setImageBitmap(category.getImage());
+        holder.mLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mOnItemClickListener != null) {
@@ -67,6 +67,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private LinearLayout mLinearLayout;
         private ImageView mImageCategory;
         private TextView mTitle;
 
@@ -74,22 +75,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             super(itemView);
             mImageCategory = (ImageView) itemView.findViewById(R.id.image_news);
             mTitle = (TextView) itemView.findViewById(R.id.text_news);
-        }
-
-        public ImageView getImageCategory() {
-            return mImageCategory;
-        }
-
-        public void setImageCategory(Bitmap bitmap) {
-            mImageCategory.setImageBitmap(bitmap);
-        }
-
-        public TextView getTitle() {
-            return mTitle;
-        }
-
-        public void setTitle(String text) {
-            mTitle.setText(text);
+            mLinearLayout = (LinearLayout) itemView.findViewById(R.id.layout_item_category);
         }
     }
 }

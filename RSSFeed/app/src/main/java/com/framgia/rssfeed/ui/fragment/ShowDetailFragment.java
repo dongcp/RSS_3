@@ -102,11 +102,6 @@ public class ShowDetailFragment extends BaseFragment {
     }
 
     @Override
-    protected boolean enableNavigationDrawer() {
-        return false;
-    }
-
-    @Override
     protected boolean enableFavoriteButton() {
         return true;
     }
