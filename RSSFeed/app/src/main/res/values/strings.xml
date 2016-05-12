@@ -33,6 +33,7 @@
     <string name="action_delete">delete</string>
     <string name="information_title">INFORMATION</string>
     <string name="nothing_dialog">No item found</string>
+    <string name="action_favorite_list">Favorite List</string>
 
     <string-array name="title_all">
         <item>Business</item>

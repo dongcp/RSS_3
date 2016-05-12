@@ -16,6 +16,9 @@ public class News implements Serializable {
     private int mCategory;
     private boolean mIsFavorite;
 
+    public News() {
+    }
+
     public News(String link) {
         mTitle = "";
         mImageUrl = "";
