@@ -1,6 +1,5 @@
 package com.framgia.rssfeed.ui.fragment;
 
-
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -10,7 +9,6 @@ import android.view.View;
 import com.framgia.rssfeed.R;
 import com.framgia.rssfeed.ui.adapter.FavoriteTabFragment;
 import com.framgia.rssfeed.ui.base.BaseFragment;
-
 
 public class FavoriteFragment extends BaseFragment {
 
@@ -32,7 +30,6 @@ public class FavoriteFragment extends BaseFragment {
     @Override
     protected void onCreateContentView(View rootView) {
         findViews(rootView);
-
     }
 
     @Override

@@ -27,7 +27,8 @@ public class XmlParser {
     public final static String ATTR_SRC = "src";
     public final static String HTTP_STR = "http";
     public final static String DIV_NAME_1 = "blockquote";
-    public final static String DIV_NAME_2 = "div [class=\"fck_detail width_common\"]";
+    public final static String DIV_NAME_2 = "div [id=\"article_content\"]";
+    public final static String DIV_NAME_3 = "div [class=\"fck_detail width_common\"]";
 
     public static ArrayList<Object> getNewsList(Context context, String urlString) throws XmlPullParserException, IOException {
         ArrayList<Object> data = new ArrayList<>();
@@ -83,9 +84,10 @@ public class XmlParser {
 
     public static ArrayList<Object> getDocumentDescription(String url) throws IOException {
         ArrayList<Object> docs = new ArrayList<>();
-        Document doc = Jsoup.connect(url).get();
+        Document doc = Jsoup.connect(url).timeout(HttpRequest.CONNECT_TIMEOUT).get();
         Elements description = doc.select(DIV_NAME_1);
         if (description.size() == 0) description = doc.select(DIV_NAME_2);
+        if (description.size() == 0) description = doc.select(DIV_NAME_3);
         if (description.size() == 0) return null;
         Elements imgTag = description.eq(0).select(TAG_IMG);
         if (imgTag.size() > 0) {
