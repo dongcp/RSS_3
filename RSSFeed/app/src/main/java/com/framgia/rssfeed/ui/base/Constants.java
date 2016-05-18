@@ -19,4 +19,7 @@ public class Constants {
     public final static String BUNDLE_NEWS = "news";
     public final static String BUNDLE_INDEX = "index";
     public final static String BUNDLE_TYPE = "type";
+    public final static String BUNDLE_NEWS_LIST = "news list";
+    public final static String ACTION_CACHE_ONE = "cache one";
+    public final static String ACTION_CACHE_ALL = "cache all";
 }

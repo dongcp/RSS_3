@@ -56,11 +56,11 @@ public class XmlParser {
                                 case TAG_ITEM:
                                     beginParse = false;
                                     news.setFavorite(DatabaseHandler.getInstance(context).isFavorite(news.getLink()));
-                                    data.add(news);
+                                    if (news.getLink() != "") data.add(news);
                                     break;
                                 case TAG_TITLE:
                                     if (beginParse) {
-                                        news.setTitle(text);
+                                        news.setTitle(text.trim());
                                     }
                                     break;
                                 case TAG_DESCRIPTION:
@@ -82,13 +82,14 @@ public class XmlParser {
         return data;
     }
 
-    public static ArrayList<Object> getDocumentDescription(String url) throws IOException {
+    public static ArrayList<Object> getDocumentFromRemote(String url) throws IOException {
         ArrayList<Object> docs = new ArrayList<>();
         Document doc = Jsoup.connect(url).timeout(HttpRequest.CONNECT_TIMEOUT).get();
         Elements description = doc.select(DIV_NAME_1);
         if (description.size() == 0) description = doc.select(DIV_NAME_2);
         if (description.size() == 0) description = doc.select(DIV_NAME_3);
         if (description.size() == 0) return null;
+        docs.add(description.eq(0).toString());
         Elements imgTag = description.eq(0).select(TAG_IMG);
         if (imgTag.size() > 0) {
             int numberOfImages = imgTag.size();
@@ -97,12 +98,35 @@ public class XmlParser {
                 if (imageUrl.contains(HTTP_STR)) {
                     imgTag.eq(i).attr(ATTR_SRC, UrlCacheUtil.getInstance().cacheImageIfNeed(imageUrl));
                 } else {
-                    imgTag.remove(i);
-                    numberOfImages = imgTag.size();
+                    imgTag.eq(i).remove();
                 }
             }
         }
         docs.add(description.eq(0).html());
+        return docs;
+    }
+
+    public static ArrayList<Object> getDocumentFromLocal(Context context, String url) throws IOException {
+        ArrayList<Object> docs = new ArrayList<>();
+        String html = DatabaseHandler.getInstance(context).getHistoryDocByUrl(url, 2);
+        if (html == null) {
+            html = DatabaseHandler.getInstance(context).getFavoriteDocByUrl(url, 2);
+        }
+        docs.add(html);
+        Document doc = Jsoup.parse(html);
+        Elements imgTag = doc.select(TAG_IMG);
+        if (imgTag.size() > 0) {
+            int numberOfImages = imgTag.size();
+            for (int i = 0; i < numberOfImages; i++) {
+                String imageUrl = imgTag.eq(i).attr(ATTR_SRC);
+                if (imageUrl.contains(HTTP_STR)) {
+                    imgTag.eq(i).attr(ATTR_SRC, UrlCacheUtil.getInstance().cacheImageIfNeed(imageUrl));
+                } else {
+                    imgTag.eq(i).remove();
+                }
+            }
+        }
+        docs.add(doc.html());
         return docs;
     }
 }

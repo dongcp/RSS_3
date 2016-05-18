@@ -12,6 +12,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.framgia.rssfeed.R;
 import com.framgia.rssfeed.data.bean.News;
@@ -22,10 +24,13 @@ import com.framgia.rssfeed.ui.base.Constants;
 import com.framgia.rssfeed.ui.decoration.ListViewItemDecoration;
 import com.framgia.rssfeed.ui.widget.DeletingDialog;
 import com.framgia.rssfeed.ui.widget.NothingDialog;
+import com.framgia.rssfeed.util.MonitorWorkerThreadUtil;
 import com.framgia.rssfeed.util.OnRecyclerViewItemClickListener;
+import com.framgia.rssfeed.util.WorkerThread;
 
 public class HistoryFragment extends Fragment implements OnRecyclerViewItemClickListener {
 
+    public final static String TAG_HISTORY_FRAGMENT = "history fragment";
     private RecyclerView mRecyclerView;
     private ListNewsAdapter mListHistoryAdapter;
 
@@ -67,12 +72,28 @@ public class HistoryFragment extends Fragment implements OnRecyclerViewItemClick
     @Override
     public void onItemClickListener(View view, int position) {
         News news = mListHistoryAdapter.getItem(position);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.BUNDLE_NEWS, news);
-        bundle.putInt(Constants.BUNDLE_TYPE, ShowDetailFragment.TYPE_HISTORY);
-        ShowDetailFragment fragment = new ShowDetailFragment();
-        fragment.setArguments(bundle);
-        replaceFragment(fragment, ListNewsFragment.TAG_LIST_NEWS_FRAGMENT);
+        if (view instanceof LinearLayout) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constants.BUNDLE_NEWS, news);
+            bundle.putInt(Constants.BUNDLE_TYPE, ShowDetailFragment.TYPE_HISTORY);
+            ShowDetailFragment fragment = new ShowDetailFragment();
+            fragment.setArguments(bundle);
+            replaceFragment(fragment, TAG_HISTORY_FRAGMENT);
+        } else if (view instanceof ImageView) {
+            WorkerThread.Work work;
+            if (!news.isFavorite()) {
+                work = WorkerThread.Work.CACHE;
+                WorkerThread.sIsCaching = true;
+            } else {
+                work = WorkerThread.Work.REMOVE;
+                WorkerThread.sIsRemoving = true;
+            }
+            WorkerThread worker = new WorkerThread(getActivity(), work, news, WorkerThread.WorkPriority.NORMAL);
+            MonitorWorkerThreadUtil.getInstance().assign(worker);
+            news.setFavorite(!news.isFavorite());
+            mListHistoryAdapter.notifyDataSetChanged();
+        }
+
     }
 
     public void findView(View view) {
@@ -87,6 +108,11 @@ public class HistoryFragment extends Fragment implements OnRecyclerViewItemClick
         mListHistoryAdapter.addItems(DatabaseHandler.getInstance(context).getHistoryNewsList());
         mListHistoryAdapter.setOnRecyclerViewItemClickListener(this);
         mRecyclerView.setAdapter(mListHistoryAdapter);
+        int numberOfNews = mListHistoryAdapter.getItemCount();
+        for (int i = 0; i < numberOfNews; i++) {
+            News news = mListHistoryAdapter.getItem(i);
+            news.setFavorite(DatabaseHandler.getInstance(getActivity()).isFavorite(news.getLink()));
+        }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

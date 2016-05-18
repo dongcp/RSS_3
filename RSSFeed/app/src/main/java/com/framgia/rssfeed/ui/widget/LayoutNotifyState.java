@@ -18,9 +18,11 @@ public class LayoutNotifyState extends RelativeLayout {
     public final static int TYPE_LOADING_LAYOUT = 1;
     public final static int TYPE_NO_DATA_LAYOUT = 2;
     public final static int TYPE_NETWORK_ERROR_LAYOUT = 3;
+    public final static int TYPE_TIME_OUT = 4;
     private ProgressBar mProgressLoading;
     private LinearLayout mNoDataLayout;
     private LinearLayout mNetworkErrorLayout;
+    private LinearLayout mTimeOutLayout;
     private int mType;
 
     public LayoutNotifyState(Context context, AttributeSet attrs) {
@@ -70,6 +72,7 @@ public class LayoutNotifyState extends RelativeLayout {
         mProgressLoading.setVisibility(GONE);
         mNoDataLayout.setVisibility(GONE);
         mNetworkErrorLayout.setVisibility(GONE);
+        mTimeOutLayout.setVisibility(GONE);
     }
 
     private void changeLayout(int type) {
@@ -86,6 +89,10 @@ public class LayoutNotifyState extends RelativeLayout {
                 makeAllGone();
                 mNetworkErrorLayout.setVisibility(VISIBLE);
                 break;
+            case TYPE_TIME_OUT:
+                makeAllGone();
+                mTimeOutLayout.setVisibility(VISIBLE);
+                break;
         }
     }
 
@@ -93,5 +100,6 @@ public class LayoutNotifyState extends RelativeLayout {
         mProgressLoading = (ProgressBar) findViewById(R.id.progress_loading);
         mNoDataLayout = (LinearLayout) findViewById(R.id.no_item_layout);
         mNetworkErrorLayout = (LinearLayout) findViewById(R.id.network_error_layout);
+        mTimeOutLayout = (LinearLayout) findViewById(R.id.connection_timeout_layout);
     }
 }

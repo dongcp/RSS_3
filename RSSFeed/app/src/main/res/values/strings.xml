@@ -13,8 +13,10 @@
 
     <string name="action_favorite">Favorite</string>
     <string name="action_switch">Switch</string>
+    <string name="action_refresh">Refresh</string>
     <string name="no_data">No Data</string>
     <string name="network_error">Network Error</string>
+    <string name="connection_time_out">Time Out</string>
 
     <!-- String Category-->
     <string name="business">Business</string>
@@ -28,7 +30,7 @@
     <string name="title_favorite">Favorite</string>
     <string name="ok">OK</string>
     <string name="cancel">CANCEL</string>
-    <string name="warning_dialog" >You will delete all history, Do you want to continue?</string>
+    <string name="warning_dialog">You will delete all history, Do you want to continue?</string>
     <string name="warning_title">WARNING</string>
     <string name="action_delete">delete</string>
     <string name="information_title">INFORMATION</string>

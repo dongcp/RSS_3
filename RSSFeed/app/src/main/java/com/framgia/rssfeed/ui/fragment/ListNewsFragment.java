@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 import com.framgia.rssfeed.R;
 import com.framgia.rssfeed.data.bean.News;
+import com.framgia.rssfeed.data.local.DatabaseHandler;
 import com.framgia.rssfeed.ui.adapter.ListNewsAdapter;
 import com.framgia.rssfeed.ui.base.BaseFragment;
 import com.framgia.rssfeed.ui.base.Constants;
@@ -53,8 +54,10 @@ public class ListNewsFragment extends BaseFragment {
                 WorkerThread.Work work;
                 if (!news.isFavorite()) {
                     work = WorkerThread.Work.CACHE;
+                    WorkerThread.sIsCaching = true;
                 } else {
                     work = WorkerThread.Work.REMOVE;
+                    WorkerThread.sIsRemoving = true;
                 }
                 WorkerThread worker = new WorkerThread(getActivity(), work, news, WorkerThread.WorkPriority.NORMAL);
                 MonitorWorkerThreadUtil.getInstance().assign(worker);
@@ -69,6 +72,7 @@ public class ListNewsFragment extends BaseFragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    enableMenuItem();
                     if (objects != null) {
                         mAdapter.removeAllItemsIfExist();
                         mNotifyStateLayout.hide(mListNews);
@@ -109,19 +113,19 @@ public class ListNewsFragment extends BaseFragment {
         mAdapter.setOnRecyclerViewItemClickListener(mOnItemClickListener);
         mListNews.setAdapter(mAdapter);
         mAdapter.changeLayoutManager(mListNews.getLayoutManager());
-        if (NetworkUtil.isNetworkAvailable(getActivity())) {
-            if (mNotifyStateLayout.getVisibility() == View.VISIBLE) {
-                mNotifyStateLayout.hide(mListNews);
-            }
-            WorkerThread workerThread = new WorkerThread(getActivity(), WorkerThread.Work.LOAD_NEWS_LIST
-                    , mUrl, WorkerThread.WorkPriority.MAX);
-            workerThread.setOnWorkListener(mOnWorkListener);
-            MonitorWorkerThreadUtil.getInstance().assign(workerThread);
-            mNotifyStateLayout.show(LayoutNotifyState.TYPE_LOADING_LAYOUT, mListNews);
-        } else {
-            if (mAdapter.getItemCount() == 0) {
+        if (mAdapter.getNewsList().size() == 0) {
+            if (NetworkUtil.isNetworkAvailable(getActivity())) loadData();
+            else if (mAdapter.getItemCount() == 0) {
                 mNotifyStateLayout.show(LayoutNotifyState.TYPE_NETWORK_ERROR_LAYOUT, mListNews);
             }
+        } else {
+            int numberOfNews = mAdapter.getItemCount();
+            for (int i = 0; i < numberOfNews; i++) {
+                News news = mAdapter.getItem(i);
+                news.setFavorite(DatabaseHandler.getInstance(getActivity())
+                        .isFavorite(news.getLink()));
+            }
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -156,11 +160,18 @@ public class ListNewsFragment extends BaseFragment {
     }
 
     @Override
+    protected boolean enableRefreshButton() {
+        return true;
+    }
+
+    @Override
     protected void onMenuItemClick(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favorite:
                 int arraySize = mAdapter.getItemCount();
                 if (item.isChecked()) {
+                    WorkerThread.sIsCaching = true;
+                    WorkerThread.sIsRemoving = false;
                     for (int i = 0; i < arraySize; i++) {
                         WorkerThread worker = new WorkerThread(getActivity(), WorkerThread.Work.CACHE
                                 , mAdapter.getItem(i), WorkerThread.WorkPriority.MIN);
@@ -168,6 +179,8 @@ public class ListNewsFragment extends BaseFragment {
                     }
                 } else {
                     MonitorWorkerThreadUtil.getInstance().clear();
+                    WorkerThread.sIsCaching = false;
+                    WorkerThread.sIsRemoving = true;
                     for (int i = 0; i < arraySize; i++) {
                         WorkerThread worker = new WorkerThread(getActivity(), WorkerThread.Work.REMOVE
                                 , mAdapter.getItem(i), WorkerThread.WorkPriority.MIN);
@@ -191,6 +204,12 @@ public class ListNewsFragment extends BaseFragment {
                 }
                 mListNews.setAdapter(mAdapter);
                 mAdapter.changeLayoutManager(mListNews.getLayoutManager());
+                break;
+            case R.id.action_refresh:
+                if (NetworkUtil.isNetworkAvailable(getActivity())) {
+                    disableMenuItem();
+                    loadData();
+                }
                 break;
         }
     }
@@ -218,6 +237,17 @@ public class ListNewsFragment extends BaseFragment {
                 mUrl = Constants.URL_NEWS;
                 break;
         }
+    }
+
+    private void loadData() {
+        if (mNotifyStateLayout.getVisibility() == View.VISIBLE) {
+            mNotifyStateLayout.hide(mListNews);
+        }
+        WorkerThread workerThread = new WorkerThread(getActivity(), WorkerThread.Work.LOAD_NEWS_LIST
+                , mUrl, WorkerThread.WorkPriority.MAX);
+        workerThread.setOnWorkListener(mOnWorkListener);
+        MonitorWorkerThreadUtil.getInstance().assign(workerThread);
+        mNotifyStateLayout.show(LayoutNotifyState.TYPE_LOADING_LAYOUT, mListNews);
     }
 
     private void findViews(View rootView) {

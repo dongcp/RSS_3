@@ -47,25 +47,23 @@ public abstract class BaseFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         menu.findItem(R.id.action_switch).setVisible(enableSwitchButton());
+        menu.findItem(R.id.action_refresh).setVisible(enableRefreshButton());
+        menu.findItem(R.id.action_open_favorite_list).setVisible(enableFavoriteList());
         MenuItem item = menu.findItem(R.id.action_favorite);
-        MenuItem itemFavoriteList = menu.findItem(R.id.action_open_favorite_list);
         if (enableFavoriteButton()) {
             item.setVisible(true);
             if (isFavorite()) {
                 item.setChecked(true);
                 item.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_highlight_star));
             } else {
-                item.setChecked(true);
+                item.setChecked(false);
                 item.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_normal_star));
             }
         } else {
             item.setVisible(false);
         }
-        if (enableFavoriteList()) {
-            itemFavoriteList.setVisible(true);
-        } else {
-            itemFavoriteList.setVisible(false);
-        }
+        if (enableToolbar()) enableMenuItem();
+        else disableMenuItem();
     }
 
     @Override
@@ -132,6 +130,10 @@ public abstract class BaseFragment extends Fragment {
         return false;
     }
 
+    protected boolean enableRefreshButton() {
+        return false;
+    }
+
     protected boolean isFavorite() {
         return false;
     }
@@ -146,6 +148,22 @@ public abstract class BaseFragment extends Fragment {
                 item.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_normal_star));
             }
             getBaseActivity().getToolbar().invalidate();
+        }
+    }
+
+    protected boolean enableToolbar() {
+        return true;
+    }
+
+    public void disableMenuItem() {
+        if (getBaseActivity().getToolbar() != null) {
+            getBaseActivity().getToolbar().getMenu().setGroupEnabled(R.id.action_group, false);
+        }
+    }
+
+    public void enableMenuItem() {
+        if (getBaseActivity().getToolbar() != null) {
+            getBaseActivity().getToolbar().getMenu().setGroupEnabled(R.id.action_group, true);
         }
     }
 }

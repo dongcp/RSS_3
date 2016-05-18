@@ -43,16 +43,18 @@ public class UrlCacheUtil {
             if (!imageFile.exists()) {
                 downloadFile(imageUrl, imageFile);
             }
-            HttpRequest.getInstance().disconnect(HttpRequest.getInstance().getConnection());
         }
         return imageFile.getAbsolutePath();
     }
 
     public void cache(News news) throws IOException {
-        ArrayList<Object> objects = XmlParser.getDocumentDescription(news.getLink());
+        ArrayList<Object> objects;
+        if (DatabaseHandler.getInstance(mContext).isHistory(news.getLink())) {
+            objects = XmlParser.getDocumentFromLocal(mContext, news.getLink());
+        } else objects = XmlParser.getDocumentFromRemote(news.getLink());
         if (objects != null) {
-            cacheImageIfNeed(news.getLink());
-            DatabaseHandler.getInstance(mContext).insertFavoriteInfo(news, (String) objects.get(0));
+            DatabaseHandler.getInstance(mContext).updateFavorite(news.getLink(),
+                    (String) objects.get(1), (String) objects.get(0));
         }
     }
 
@@ -83,6 +85,7 @@ public class UrlCacheUtil {
         }
         fileOutput.close();
         inputStream.close();
+        HttpRequest.getInstance().disconnect(HttpRequest.getInstance().getConnection());
     }
 
     private String getFileName(String imageUrl) {

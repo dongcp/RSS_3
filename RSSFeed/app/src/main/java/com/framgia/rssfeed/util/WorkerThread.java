@@ -3,6 +3,7 @@ package com.framgia.rssfeed.util;
 import android.content.Context;
 
 import com.framgia.rssfeed.data.bean.News;
+import com.framgia.rssfeed.data.local.DatabaseHandler;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -14,6 +15,8 @@ import java.util.ArrayList;
  */
 public class WorkerThread implements Runnable, Comparable<WorkerThread> {
 
+    public static boolean sIsCaching;
+    public static boolean sIsRemoving;
     private Context mContext;
     private News mNews;
     private OnWorkListener mOnWorkListener;
@@ -55,10 +58,16 @@ public class WorkerThread implements Runnable, Comparable<WorkerThread> {
 
     public void doWork(Work work) throws IOException, XmlPullParserException {
         switch (work) {
-            case LOAD_DOC:
-                ArrayList<Object> docs = XmlParser.getDocumentDescription(mNews.getLink());
+            case LOAD_DOC_REMOTE:
+                ArrayList<Object> docs = XmlParser.getDocumentFromRemote(mNews.getLink());
                 if (mOnWorkListener != null) {
                     mOnWorkListener.onWorkDone(docs);
+                }
+                break;
+            case LOAD_DOC_LOCAL:
+                ArrayList<Object> localDocs = XmlParser.getDocumentFromLocal(mContext, mNews.getLink());
+                if (mOnWorkListener != null) {
+                    mOnWorkListener.onWorkDone(localDocs);
                 }
                 break;
             case LOAD_NEWS_LIST:
@@ -68,10 +77,13 @@ public class WorkerThread implements Runnable, Comparable<WorkerThread> {
                 }
                 break;
             case CACHE:
-                UrlCacheUtil.getInstance().cache(mNews);
+                if (sIsCaching && NetworkUtil.isNetworkAvailable(mContext)) {
+                    DatabaseHandler.getInstance(mContext).insertFavoriteInfo(mNews, "", "");
+                    UrlCacheUtil.getInstance().cache(mNews);
+                }
                 break;
             case REMOVE:
-                UrlCacheUtil.getInstance().remove(mNews);
+                if (sIsRemoving) UrlCacheUtil.getInstance().remove(mNews);
                 break;
         }
     }
@@ -100,7 +112,8 @@ public class WorkerThread implements Runnable, Comparable<WorkerThread> {
     public enum Work {
         CACHE,
         REMOVE,
-        LOAD_DOC,
+        LOAD_DOC_REMOTE,
+        LOAD_DOC_LOCAL,
         LOAD_NEWS_LIST
     }
 
